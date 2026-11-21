@@ -1,0 +1,172 @@
+<svg width="1000" height="700" viewBox="0 0 1000 700" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <!-- Background Parchment Gradient -->
+    <linearGradient id="parchment" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#ffffff"/>
+      <stop offset="50%" stop-color="#fafbf8"/>
+      <stop offset="100%" stop-color="#f2f7f4"/>
+    </linearGradient>
+
+    <!-- Rich Gold Gradients -->
+    <linearGradient id="gold" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#e8c878"/>
+      <stop offset="30%" stop-color="#c8962e"/>
+      <stop offset="60%" stop-color="#dfb76c"/>
+      <stop offset="85%" stop-color="#b88320"/>
+      <stop offset="100%" stop-color="#e2bf72"/>
+    </linearGradient>
+
+    <linearGradient id="goldSeal" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#fff1ad"/>
+      <stop offset="35%" stop-color="#d9a738"/>
+      <stop offset="70%" stop-color="#f2dc92"/>
+      <stop offset="100%" stop-color="#996a12"/>
+    </linearGradient>
+
+    <!-- Forest Emerald Gradient -->
+    <linearGradient id="emerald" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#1e8049"/>
+      <stop offset="100%" stop-color="#0e4a29"/>
+    </linearGradient>
+
+    <!-- Seal Soft Shadow -->
+    <filter id="sealShadow" x="-20%" y="-20%" width="140%" height="140%">
+      <feDropShadow dx="0" dy="6" stdDeviation="6" flood-color="#0b2e4f" flood-opacity="0.22"/>
+    </filter>
+  </defs>
+
+  <!-- Base Parchment Background -->
+  <rect width="1000" height="700" rx="20" fill="url(#parchment)"/>
+
+  <!-- Subtle Guilloche Center Watermark (Guilloche / Rosette Aesthetic) -->
+  <g transform="translate(500, 350)" opacity="0.04" stroke="#0b2e4f" stroke-width="1.2" fill="none">
+    <circle cx="0" cy="0" r="160"/>
+    <circle cx="0" cy="0" r="140" stroke-dasharray="4 4"/>
+    <circle cx="0" cy="0" r="120"/>
+    <circle cx="0" cy="0" r="100"/>
+    <circle cx="0" cy="0" r="80" stroke-dasharray="6 3"/>
+    <circle cx="0" cy="0" r="60"/>
+    <!-- Interlocking Petal Rosette -->
+    <path d="M0,-140 C50,-90 90,-50 140,0 C90,50 50,90 0,140 C-50,90 -90,50 -140,0 C-90,-50 -50,-90 0,-140 Z"/>
+    <path d="M-99,-99 C-30,-120 30,-120 99,-99 C120,-30 120,30 99,99 C30,120 -30,120 -99,99 C-120,30 -120,-30 -99,-99 Z"/>
+  </g>
+
+  <!-- Outer Navy Frame -->
+  <rect x="24" y="24" width="952" height="652" rx="14" fill="none" stroke="#0b2e4f" stroke-width="2.5"/>
+
+  <!-- Gold Accent Inner Frame -->
+  <rect x="36" y="36" width="928" height="628" rx="10" fill="none" stroke="url(#gold)" stroke-width="2"/>
+
+  <!-- Fine Ornamental Dotted Inset Border -->
+  <rect x="46" y="46" width="908" height="608" rx="8" fill="none" stroke="#17653a" stroke-width="1" stroke-dasharray="6 4" opacity="0.45"/>
+
+  <!-- Corner Filigree Ornaments -->
+  <!-- Top Left -->
+  <g transform="translate(48, 48)">
+    <path d="M0,38 L0,0 L38,0" fill="none" stroke="url(#gold)" stroke-width="3"/>
+    <circle cx="11" cy="11" r="4.5" fill="url(#gold)"/>
+    <path d="M4,22 C14,20 20,14 22,4" fill="none" stroke="#17653a" stroke-width="1.6"/>
+  </g>
+  <!-- Top Right -->
+  <g transform="translate(952, 48) scale(-1, 1)">
+    <path d="M0,38 L0,0 L38,0" fill="none" stroke="url(#gold)" stroke-width="3"/>
+    <circle cx="11" cy="11" r="4.5" fill="url(#gold)"/>
+    <path d="M4,22 C14,20 20,14 22,4" fill="none" stroke="#17653a" stroke-width="1.6"/>
+  </g>
+  <!-- Bottom Left -->
+  <g transform="translate(48, 652) scale(1, -1)">
+    <path d="M0,38 L0,0 L38,0" fill="none" stroke="url(#gold)" stroke-width="3"/>
+    <circle cx="11" cy="11" r="4.5" fill="url(#gold)"/>
+    <path d="M4,22 C14,20 20,14 22,4" fill="none" stroke="#17653a" stroke-width="1.6"/>
+  </g>
+  <!-- Bottom Right -->
+  <g transform="translate(952, 652) scale(-1, -1)">
+    <path d="M0,38 L0,0 L38,0" fill="none" stroke="url(#gold)" stroke-width="3"/>
+    <circle cx="11" cy="11" r="4.5" fill="url(#gold)"/>
+    <path d="M4,22 C14,20 20,14 22,4" fill="none" stroke="#17653a" stroke-width="1.6"/>
+  </g>
+
+  <!-- Top Decorative Laurel Crest -->
+  <g transform="translate(500, 102)">
+    <!-- Central Gold Star -->
+    <path d="M0,-10 L2.5,-3 L10,-3 L4,2 L6,9 L0,5 L-6,9 L-4,2 L-10,-3 L-2.5,-3 Z" fill="url(#gold)"/>
+    <!-- Laurel Wreath Leaves (Left) -->
+    <path d="M-14,-2 C-22,-4 -28,-1 0-32,6 C-30,1 -24,-3 -18,-4" fill="none" stroke="#17653a" stroke-width="1.5" stroke-linecap="round"/>
+    <path d="M-22,-6 C-27,-9 -30,-8 -32,-3" fill="none" stroke="#17653a" stroke-width="1.3" stroke-linecap="round"/>
+    <!-- Laurel Wreath Leaves (Right) -->
+    <path d="M14,-2 C22,-4 28,-1 32,6 C30,1 24,-3 18,-4" fill="none" stroke="#17653a" stroke-width="1.5" stroke-linecap="round"/>
+    <path d="M22,-6 C27,-9 30,-8 32,-3" fill="none" stroke="#17653a" stroke-width="1.3" stroke-linecap="round"/>
+  </g>
+
+  <!-- Eyebrow Subheader -->
+  <text x="500" y="138" text-anchor="middle" font-family="'Plus Jakarta Sans', system-ui, sans-serif" font-size="12" font-weight="700" letter-spacing="4.5" fill="#17653a">★  OFFICIAL STATUTORY DOCUMENT  ★</text>
+
+  <!-- Main Certificate Title (Clean, Bold, Elegant) -->
+  <text x="500" y="196" text-anchor="middle" font-family="'Fraunces', Georgia, serif" font-size="44" font-weight="700" fill="#0b2e4f" letter-spacing="2.5">OFFICIAL CERTIFICATE</text>
+
+  <!-- Decorative Separator Line with Central Diamond Flourish -->
+  <g transform="translate(500, 226)">
+    <line x1="-280" y1="0" x2="-24" y2="0" stroke="url(#gold)" stroke-width="1.5"/>
+    <polygon points="0,-7 7,0 0,7 -7,0" fill="url(#gold)"/>
+    <circle cx="-14" cy="0" r="2.5" fill="#17653a"/>
+    <circle cx="14" cy="0" r="2.5" fill="#17653a"/>
+    <line x1="24" y1="0" x2="280" y2="0" stroke="url(#gold)" stroke-width="1.5"/>
+  </g>
+
+  <!-- Introductory Line -->
+  <text x="500" y="270" text-anchor="middle" font-family="'Plus Jakarta Sans', Georgia, serif" font-size="15" font-style="italic" fill="#586e82">This document certifies the official status and statutory compliance of</text>
+
+  <!-- Organization Name (Distinguished & Authoritative) -->
+  <text x="500" y="322" text-anchor="middle" font-family="'Fraunces', Georgia, serif" font-size="33" font-weight="700" fill="#0b2e4f" letter-spacing="0.8">AMAAN ANSARI WELFARE FOUNDATION</text>
+
+  <!-- Clean Verification Pill Badge -->
+  <g transform="translate(500, 366)">
+    <rect x="-170" y="-15" width="340" height="30" rx="15" fill="#ebf6ee" stroke="#17653a" stroke-width="1.3"/>
+    <text x="0" y="5" text-anchor="middle" font-family="'Plus Jakarta Sans', system-ui, sans-serif" font-size="11.5" font-weight="700" fill="#17653a" letter-spacing="2">VERIFIED &amp; RECOGNIZED DOCUMENT</text>
+  </g>
+
+  <!-- Minimal Universal Trust Statement -->
+  <text x="500" y="426" text-anchor="middle" font-family="'Plus Jakarta Sans', system-ui, sans-serif" font-size="13.5" font-weight="500" fill="#4f687e">Public Charitable Welfare Organization · Statutory Compliance Record</text>
+
+  <!-- Subtle Dividing Accent Before Signatures & Seal -->
+  <line x1="200" y1="466" x2="800" y2="466" stroke="url(#gold)" stroke-width="1" opacity="0.55"/>
+
+  <!-- Left: Authorized Signatory -->
+  <g transform="translate(250, 560)">
+    <!-- Artistic Signature Flourish -->
+    <path d="M-65,-12 C-50,-24 -35,5 -20,-16 C-8,-32 10,2 25,-8 C35,-14 45,2 60,-5" fill="none" stroke="#0b2e4f" stroke-width="1.8" stroke-linecap="round" opacity="0.85"/>
+    <line x1="-95" y1="8" x2="95" y2="8" stroke="url(#gold)" stroke-width="1.4"/>
+    <text x="0" y="28" text-anchor="middle" font-family="'Plus Jakarta Sans', system-ui, sans-serif" font-size="11" font-weight="700" fill="#0b2e4f" letter-spacing="1.5">AUTHORIZED SIGNATORY</text>
+    <text x="0" y="44" text-anchor="middle" font-family="'Plus Jakarta Sans', system-ui, sans-serif" font-size="9.5" font-weight="500" fill="#6d8092">Board of Trustees</text>
+  </g>
+
+  <!-- Right: Verification & Registry Stamp -->
+  <g transform="translate(750, 560)">
+    <!-- Elegant Validation Monogram / Check Crest -->
+    <circle cx="0" cy="-14" r="15" fill="#ffffff" stroke="url(#gold)" stroke-width="1.5"/>
+    <path d="M-6,-14 L-2,-10 L6,-18" fill="none" stroke="#17653a" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+    <line x1="-95" y1="8" x2="95" y2="8" stroke="url(#gold)" stroke-width="1.4"/>
+    <text x="0" y="28" text-anchor="middle" font-family="'Plus Jakarta Sans', system-ui, sans-serif" font-size="11" font-weight="700" fill="#0b2e4f" letter-spacing="1.5">STATUTORY RECORD</text>
+    <text x="0" y="44" text-anchor="middle" font-family="'Plus Jakarta Sans', system-ui, sans-serif" font-size="9.5" font-weight="500" fill="#6d8092">Official Registry</text>
+  </g>
+
+  <!-- Center: Embossed Wax Golden Seal with Draped Ribbons -->
+  <g transform="translate(500, 552)" filter="url(#sealShadow)">
+    <!-- Draped Twin Ribbons -->
+    <path d="M-14,26 L-24,78 L-9,67 L5,78 L-3,26 Z" fill="url(#emerald)"/>
+    <path d="M14,26 L3,78 L17,67 L31,78 L23,26 Z" fill="url(#gold)"/>
+
+    <!-- Outer Fluted / Starburst Gold Seal Base -->
+    <circle cx="0" cy="0" r="46" fill="url(#goldSeal)"/>
+    <circle cx="0" cy="0" r="42" fill="none" stroke="#996a12" stroke-width="1.5" stroke-dasharray="3 2"/>
+    <circle cx="0" cy="0" r="37" fill="#ffffff" opacity="0.18"/>
+    <circle cx="0" cy="0" r="34" fill="url(#goldSeal)" stroke="#ffffff" stroke-width="0.8"/>
+
+    <!-- Inner Navy Disc -->
+    <circle cx="0" cy="0" r="27" fill="#0b2e4f"/>
+
+    <!-- Center Emblem Star -->
+    <path d="M0,-14 L3,-4 L14,-3 L6,4 L8,14 L0,9 L-8,14 L-6,4 L-14,-3 L-3,-4 Z" fill="url(#goldSeal)"/>
+    <text x="0" y="21" text-anchor="middle" font-family="'Plus Jakarta Sans', system-ui, sans-serif" font-size="6" font-weight="800" fill="#ffffff" letter-spacing="1.2">OFFICIAL SEAL</text>
+  </g>
+</svg>
