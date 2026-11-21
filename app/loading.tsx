@@ -1,12 +1,13 @@
 export default function Loading() {
   return (
-    <div className="flex min-h-[50vh] items-center justify-center">
-      <div className="flex flex-col items-center gap-3">
-        <div className="h-10 w-10 animate-spin rounded-full border-4 border-[var(--line)] border-t-[var(--primary)]" />
-        <p className="text-xs font-medium tracking-wider text-[var(--muted)] uppercase">
-          Loading...
-        </p>
+    <main className="site-loading" role="status" aria-live="polite" aria-label="Loading page">
+      <div className="site-loading__content">
+        <img className="site-loading__logo" src="/images/logo/TransparentLogo.png" alt="" />
+        <span className="site-loading__eyebrow">AMAAN ANSARI MEMORIAL</span>
+        <p className="site-loading__title">A little good is on its way</p>
+        <div className="site-loading__track" aria-hidden="true"><span /></div>
+        <p className="site-loading__caption">Loading</p>
       </div>
-    </div>
+    </main>
   );
 }

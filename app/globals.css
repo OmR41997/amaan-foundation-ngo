@@ -1,6 +1,18 @@
 @import url('https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,700&family=Plus+Jakarta+Sans:wght@400;500;600;700&family=Hind:wght@400;500;600;700&family=Noto+Sans+Devanagari:wght@400;500;600;700&family=Tiro+Devanagari+Hindi&display=swap');
 @import "tailwindcss";
 
+.site-loading { min-height: 42vh; display: grid; place-items: center; padding: 1.5rem; color: var(--ink); background: radial-gradient(ellipse at 50% 45%, color-mix(in srgb, var(--mint) 56%, transparent), var(--bg) 68%); }
+.site-loading__content { display: flex; flex-direction: column; align-items: center; text-align: center; }
+.site-loading__logo { width: 4.5rem; height: 4.5rem; object-fit: contain; filter: drop-shadow(0 6px 10px rgba(11, 46, 79, .1)); animation: loader-float 3s ease-in-out infinite; }
+.site-loading__eyebrow { margin-top: .85rem; color: var(--green); font-size: .55rem; font-weight: 700; letter-spacing: .18em; }
+.site-loading__title { margin: .4rem 0 .9rem; font-family: var(--disp); font-size: 1.2rem; font-weight: 500; }
+.site-loading__caption { margin: .55rem 0 0; color: var(--muted); font-size: .58rem; letter-spacing: .16em; text-transform: uppercase; }
+.site-loading__track { width: 7rem; height: 2px; overflow: hidden; border-radius: 99px; background: var(--line); }
+.site-loading__track span { display: block; width: 38%; height: 100%; border-radius: inherit; background: var(--green); animation: loader-progress 1.5s cubic-bezier(.4,0,.2,1) infinite; }
+@keyframes loader-progress { from { transform: translateX(-110%); } to { transform: translateX(275%); } }
+@keyframes loader-float { 50% { transform: translateY(-5px); } }
+@media (prefers-reduced-motion: reduce) { .site-loading__logo, .site-loading__track span { animation-duration: 3s; } }
+
 @custom-variant dark (&:where([data-theme=dark], [data-theme=dark] *));
 
 :root {
