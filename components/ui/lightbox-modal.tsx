@@ -32,22 +32,22 @@ export function LightboxModal({ isOpen, onClose, imageSrc, title, category }: Li
       </button>
 
       <div
-        className="relative max-h-[85vh] max-w-4xl w-full overflow-hidden rounded-2xl bg-black/50 shadow-2xl"
+        className="relative max-h-[88vh] max-w-4xl w-full overflow-hidden rounded-2xl bg-black/60 shadow-2xl border border-white/10"
         onClick={(e) => e.stopPropagation()}
       >
-        <div className="relative aspect-[16/10] w-full">
+        <div className="relative h-[60vh] sm:h-[72vh] w-full">
           <Image
             src={imageSrc}
             alt={title || "Gallery photo"}
             fill
-            className="object-contain"
+            className="object-contain p-2"
             sizes="(max-width: 1200px) 100vw, 1200px"
           />
         </div>
         {(title || category) && (
-          <div className="bg-black/70 px-6 py-4 text-white">
-            {category && <span className="text-xs uppercase tracking-wider text-emerald-400 font-bold">{category}</span>}
-            {title && <h4 className="text-base font-semibold mt-0.5">{title}</h4>}
+          <div className="bg-black/80 px-5 sm:px-6 py-3.5 sm:py-4 text-white border-t border-white/10 backdrop-blur-md">
+            {category && <span className="text-[11px] uppercase tracking-wider text-emerald-400 font-bold">{category}</span>}
+            {title && <h4 className="text-sm sm:text-base font-semibold mt-0.5">{title}</h4>}
           </div>
         )}
       </div>

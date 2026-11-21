@@ -264,7 +264,7 @@ function MemberDetailModal({
           animate={{ opacity: 1, scale: 1, y: 0 }}
           exit={{ opacity: 0, scale: 0.92, y: 20 }}
           transition={{ duration: 0.28, ease: [0.16, 1, 0.3, 1] }}
-          className="relative z-10 flex w-full max-w-lg flex-col overflow-hidden rounded-3xl bg-[var(--card)] shadow-2xl border border-[var(--line)]"
+          className="relative z-10 flex w-full max-w-lg max-h-[92vh] flex-col overflow-y-auto custom-scrollbar rounded-3xl bg-[var(--card)] shadow-2xl border border-[var(--line)]"
         >
           {/* Top Decorative Banner */}
           <div className="relative h-32 w-full bg-gradient-to-r from-[#1f6fa8] via-[#2780bf] to-[#185987] p-4 flex items-start justify-between">

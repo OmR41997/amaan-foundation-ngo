@@ -181,12 +181,12 @@ export function ImpactSlider({ items, isHindi }: ImpactSliderProps) {
                 maxWidth: "100%",
               }}
             >
-              <article className="group relative overflow-hidden rounded-3xl border border-[var(--line)] bg-gradient-to-br from-[var(--card)] via-[var(--card)] to-[var(--mint)]/20 dark:from-[var(--card)] dark:via-[var(--card)] dark:to-[var(--mint)]/10 p-6 sm:p-8 md:p-10 lg:p-12 shadow-sm hover:shadow-md transition-all duration-300 select-none">
+              <article className="group relative overflow-hidden rounded-3xl border border-[var(--line)] bg-gradient-to-br from-[var(--card)] via-[var(--card)] to-[var(--mint)]/20 dark:from-[var(--card)] dark:via-[var(--card)] dark:to-[var(--mint)]/10 p-4 sm:p-7 md:p-10 lg:p-12 shadow-sm hover:shadow-md transition-all duration-300 select-none">
                 {/* Ambient subtle glow for depth */}
                 <div className="pointer-events-none absolute -top-24 -right-24 h-80 w-80 rounded-full bg-[var(--green)]/8 blur-3xl dark:bg-[var(--green)]/5" />
                 <div className="pointer-events-none absolute -bottom-24 -left-24 h-80 w-80 rounded-full bg-[var(--gold)]/8 blur-3xl" />
 
-                <div className="relative z-10 grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-center">
+                <div className="relative z-10 grid grid-cols-1 lg:grid-cols-12 gap-6 sm:gap-8 lg:gap-12 items-center">
                   {/* Left: Heading, Clean Tag, Divider & Description */}
                   <div className="lg:col-span-7 flex flex-col justify-center order-2 lg:order-1">
                     <div className="flex items-center gap-2 mb-3 sm:mb-4">
@@ -197,16 +197,16 @@ export function ImpactSlider({ items, isHindi }: ImpactSliderProps) {
                     </div>
 
                     <h3
-                      className="text-2xl sm:text-3xl md:text-3xl lg:text-4xl font-extrabold text-[var(--navy)] dark:text-emerald-300 leading-tight tracking-tight group-hover:text-[var(--green)] transition-colors duration-200"
+                      className="text-xl sm:text-2xl md:text-3xl lg:text-4xl font-extrabold text-[var(--navy)] dark:text-emerald-300 leading-tight tracking-tight group-hover:text-[var(--green)] transition-colors duration-200"
                       style={{ fontFamily: "var(--disp)" }}
                     >
                       {item.title}
                     </h3>
 
                     {/* Gradient accent line */}
-                    <div className="h-1 w-16 bg-gradient-to-r from-[var(--green)] to-[var(--gold)] rounded-full my-4" />
+                    <div className="h-1 w-16 bg-gradient-to-r from-[var(--green)] to-[var(--gold)] rounded-full my-3 sm:my-4" />
 
-                    <p className="text-base sm:text-lg text-[var(--ink)] opacity-85 dark:opacity-90 leading-relaxed font-normal">
+                    <p className="text-sm sm:text-base md:text-lg text-[var(--ink)] opacity-85 dark:opacity-90 leading-relaxed font-normal">
                       {item.description}
                     </p>
                   </div>

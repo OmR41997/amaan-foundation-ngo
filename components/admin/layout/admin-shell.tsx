@@ -64,7 +64,7 @@ export function AdminShell({
       />
 
       <div
-        className={`fixed inset-y-0 left-0 z-20 transition-transform md:translate-x-0 ${
+        className={`fixed inset-y-0 left-0 z-50 transition-transform md:translate-x-0 ${
           mobileOpen ? "translate-x-0" : "-translate-x-full"
         }`}
       >

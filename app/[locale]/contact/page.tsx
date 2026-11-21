@@ -109,14 +109,14 @@ export default async function ContactPage({
       </div>
 
       {/* Main Grid: Membership Form + Beside Cards (Fully Responsive & Bottom-Matched) */}
-      <section className="mt-6 sm:mt-8 md:mt-10 grid grid-cols-1 md:grid-cols-12 gap-5 sm:gap-6 lg:gap-8">
+      <section className="mt-6 sm:mt-8 md:mt-10 grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-8">
         {/* Left Column: Life / Temporary Membership Form */}
-        <div className="md:col-span-7 flex flex-col">
+        <div className="lg:col-span-7 flex flex-col">
           <ContactForm locale={locale} />
         </div>
 
         {/* Right Column: Contact Directory and Information Cards */}
-        <aside className="md:col-span-5 flex flex-col justify-between gap-4 h-auto md:h-full">
+        <aside className="lg:col-span-5 flex flex-col gap-4.5">
           {/* 1. Contact Directory */}
           <div className="shrink-0 rounded-2xl sm:rounded-3xl border border-[var(--line)] bg-[var(--card)] p-4 sm:p-5 shadow-[0_12px_30px_rgba(20,48,70,0.05)]">
             <ContactDirectory

@@ -21,6 +21,9 @@ function TiltCard({
   const cardRef = useRef<HTMLDivElement>(null);
 
   const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
+    if (typeof window !== "undefined" && window.matchMedia("(pointer: coarse)").matches) {
+      return;
+    }
     const card = cardRef.current;
     if (!card) return;
     const r = card.getBoundingClientRect();
@@ -260,14 +263,14 @@ export function HomeView({
               <button
                 type="button"
                 onClick={() => setIsDonateOpen(true)}
-                className="btn fill beat"
+                className="btn fill beat w-full sm:w-auto justify-center"
               >
                 <Icon name="donate" className="h-4 w-4.5" />
                 <span>{hero.ctaLabel || (isHindi ? "दान करें" : "Donate Now")}</span>
                 <Icon name="arrow" />
               </button>
 
-              <Link className="btn line" href="/amaans-story">
+              <Link className="btn line w-full sm:w-auto justify-center" href="/amaans-story">
                 <span>{hero.storyLabel || (isHindi ? "अमान की कहानी" : "Amaan's Story")}</span>
                 <Icon name="arrow" />
               </Link>

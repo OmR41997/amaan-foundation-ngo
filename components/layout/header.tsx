@@ -64,14 +64,14 @@ export function Header({ locale }: { locale: AppLocale }) {
       <header className={`site-header ${isScrolled ? "scrolled" : ""}`}>
         <div className="nav">
           <Link className="brand" href="/">
-            <div className="relative h-12 w-12 sm:h-14 sm:w-14 shrink-0 overflow-hidden rounded-full bg-white p-1 border-2 border-white shadow-md">
+            <div className="relative h-10 w-10 sm:h-12 sm:w-12 shrink-0 overflow-hidden rounded-full bg-white p-0.5 sm:p-1 border-2 border-white shadow-sm">
               <Image
                 src="/images/logo/logo.png"
                 alt={isHindi ? "अमान अंसारी वेलफेयर फाउंडेशन लोगो" : "AAWF Logo"}
                 fill
                 priority
                 className="object-contain p-0.5"
-                sizes="(max-width: 640px) 48px, 56px"
+                sizes="(max-width: 640px) 40px, 56px"
               />
             </div>
             <span>
@@ -96,48 +96,50 @@ export function Header({ locale }: { locale: AppLocale }) {
             })}
           </nav>
 
-          <LanguageSwitcher locale={locale} />
+          <div className="header-actions flex items-center gap-1.5 sm:gap-2.5 ml-auto shrink-0">
+            <LanguageSwitcher locale={locale} />
 
-          <button
-            className="theme-toggle"
-            type="button"
-            onClick={toggleTheme}
-            aria-label={theme === "dark" ? "Switch to light mode" : "Switch to dark mode"}
-            title={theme === "dark" ? "Switch to light mode" : "Switch to dark mode"}
-          >
-            <span aria-hidden="true">{theme === "dark" ? "☀" : "☾"}</span>
-          </button>
+            <button
+              className="theme-toggle"
+              type="button"
+              onClick={toggleTheme}
+              aria-label={theme === "dark" ? "Switch to light mode" : "Switch to dark mode"}
+              title={theme === "dark" ? "Switch to light mode" : "Switch to dark mode"}
+            >
+              <span aria-hidden="true">{theme === "dark" ? "☀" : "☾"}</span>
+            </button>
 
-          <button
-            type="button"
-            onClick={() => setIsDonateOpen(true)}
-            className="btn fill sm beat inline-flex items-center gap-2 font-bold tracking-wide shadow-sm hover:shadow-md cursor-pointer whitespace-nowrap"
-          >
-            <Icon name="donate" className="h-4 w-4.5" />
-            <span className="font-bold tracking-wide">{isHindi ? "दान करें" : "Donate Now"}</span>
-          </button>
+            <button
+              type="button"
+              onClick={() => setIsDonateOpen(true)}
+              className="nav-donate-btn btn fill sm beat hidden sm:inline-flex items-center gap-2 font-bold tracking-wide shadow-sm hover:shadow-md cursor-pointer whitespace-nowrap"
+            >
+              <Icon name="donate" className="h-4 w-4.5" />
+              <span className="font-bold tracking-wide">{isHindi ? "दान करें" : "Donate Now"}</span>
+            </button>
 
-          {/* Mobile hamburger button */}
-          <button
-            type="button"
-            aria-label="Toggle navigation menu"
-            aria-expanded={isMobileMenuOpen}
-            onClick={() => setIsMobileMenuOpen((prev) => !prev)}
-            className="inline-flex h-9 w-9 items-center justify-center rounded-full border border-[var(--line)] bg-[var(--card)] text-[var(--ink)] lg:hidden"
-          >
-            <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              {isMobileMenuOpen ? (
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-              ) : (
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
-              )}
-            </svg>
-          </button>
+            {/* Mobile hamburger button */}
+            <button
+              type="button"
+              aria-label="Toggle navigation menu"
+              aria-expanded={isMobileMenuOpen}
+              onClick={() => setIsMobileMenuOpen((prev) => !prev)}
+              className="inline-flex h-8.5 w-8.5 sm:h-9 sm:w-9 shrink-0 items-center justify-center rounded-full border border-[var(--line)] bg-[var(--card)] text-[var(--ink)] lg:hidden shadow-2xs hover:bg-[var(--mint)] transition cursor-pointer"
+            >
+              <svg className="h-4.5 w-4.5 sm:h-5 sm:w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                {isMobileMenuOpen ? (
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                ) : (
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
+                )}
+              </svg>
+            </button>
+          </div>
         </div>
 
         {/* Mobile Navigation Dropdown */}
         {isMobileMenuOpen && (
-          <div className="border-t border-[var(--line)] bg-[var(--card)] px-6 py-4 lg:hidden space-y-2">
+          <div className="border-t border-[var(--line)] bg-[var(--card)] px-4 sm:px-6 py-4 lg:hidden space-y-1.5 shadow-xl backdrop-blur-md">
             {navLinks.map((link) => {
               const href = link.href || "/";
               const active = isLinkActive(href);
@@ -146,24 +148,27 @@ export function Header({ locale }: { locale: AppLocale }) {
                   key={link.key}
                   href={href}
                   onClick={() => setIsMobileMenuOpen(false)}
-                  className={`block rounded-xl px-4 py-2 text-sm font-semibold ${
+                  className={`flex items-center justify-between rounded-xl px-4 py-2.5 text-sm font-semibold transition-all duration-200 ${
                     active
-                      ? "bg-[var(--mint)] text-[var(--green)]"
+                      ? "bg-[var(--mint)] text-[var(--green)] shadow-2xs"
                       : "text-[var(--ink)] hover:bg-[var(--mint)] hover:text-[var(--green)]"
                   }`}
                 >
-                  {data.nav[link.key]}
+                  <span>{data.nav[link.key]}</span>
+                  <svg className="h-4 w-4 opacity-50" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                  </svg>
                 </Link>
               );
             })}
-            <div className="pt-2">
+            <div className="pt-3 border-t border-[var(--line)]/60">
               <button
                 type="button"
                 onClick={() => {
                   setIsMobileMenuOpen(false);
                   setIsDonateOpen(true);
                 }}
-                className="btn fill w-full justify-center text-sm py-2.5 font-bold tracking-wide shadow-sm beat cursor-pointer"
+                className="btn fill w-full justify-center text-sm py-3 font-bold tracking-wide shadow-md beat cursor-pointer"
               >
                 <Icon name="donate" className="h-4 w-4.5" />
                 <span>{isHindi ? "दान करें" : "Donate Now"}</span>

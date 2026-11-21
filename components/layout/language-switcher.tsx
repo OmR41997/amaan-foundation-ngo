@@ -18,9 +18,9 @@ export function LanguageSwitcher({ locale }: { locale: AppLocale }) {
             locale={item}
             className={`btn-lang ${active ? "on" : ""}`}
             style={{
-              padding: "6px 11px",
+              padding: "3.5px 7.5px",
               borderRadius: "30px",
-              fontSize: "12px",
+              fontSize: "11px",
               fontWeight: 600,
               background: active ? "var(--green)" : "transparent",
               color: active ? "#ffffff" : "var(--ink)",
