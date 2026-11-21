@@ -53,11 +53,8 @@ _unused_images_backup/
 public/images/gallery/
 public/images/icons/  
 public/images/project-gullak/
-public/images/team
 public/images/assets/
 public/images/hero/*.jpg
 public/images/hero/KindnessBeneath.png
 public/images/logo/ngo-removebg-preview.png
 public/images/amaan/*.jpeg
-
-!/public/images/team/alim.jpeg
