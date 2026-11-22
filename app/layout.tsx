@@ -11,15 +11,15 @@ export const metadata: Metadata = {
   metadataBase: new URL("https://amaanansariwelfare.org"),
   icons: {
     icon: {
-      url: "/images/icons/cropped_circle_image.png",
-      type: "image/png",
+      url: "/images/icons/amaan-ansari-welfare-foundation.ico",
+      type: "image/x-icon",
     },
     shortcut: {
-      url: "/images/icons/cropped_circle_image.png",
-      type: "image/png",
+      url: "/images/icons/amaan-ansari-welfare-foundation.ico",
+      type: "image/x-icon",
     },
     apple: {
-      url: "/images/icons/cropped_circle_image.png",
+      url: "/images/icons/amaan-ansari-welfare-foundation.png",
       type: "image/png",
     },
   },
