@@ -3,7 +3,8 @@
 import { AppLocale } from "@/i18n/routing";
 import { submitMemberRequest } from "@/lib/api/member-requests";
 import { ApiError } from "@/lib/api/client";
-import { useState } from "react";
+import { deleteUploadedMedia } from "@/lib/api/uploads";
+import { useEffect, useRef, useState } from "react";
 import { ContactPhotoUploader } from "@/components/contact/contact-photo-uploader";
 import { INDIAN_STATES, getDistrictsForState } from "@/data/india-locations";
 import { formatAadhaar, getAadhaarDigits } from "@/lib/formatters";
@@ -188,6 +189,36 @@ export function ContactForm({ locale }: { locale: AppLocale }) {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [photoUrl, setPhotoUrl] = useState("");
 
+  // Track image URLs uploaded during this session but not yet saved
+  const unsavedUploadedUrlsRef = useRef<string[]>([]);
+  const isSavedRef = useRef(false);
+
+  useEffect(() => {
+    return () => {
+      if (isSavedRef.current) return;
+      while (unsavedUploadedUrlsRef.current.length > 0) {
+        const urlToDelete = unsavedUploadedUrlsRef.current.pop();
+        if (urlToDelete) {
+          deleteUploadedMedia(urlToDelete);
+        }
+      }
+    };
+  }, []);
+
+  const handlePhotoChange = (newUrl: string) => {
+    if (newUrl !== photoUrl) {
+      const prevUnsaved = unsavedUploadedUrlsRef.current.pop();
+      if (prevUnsaved) {
+        deleteUploadedMedia(prevUnsaved);
+      }
+      if (newUrl) {
+        unsavedUploadedUrlsRef.current.push(newUrl);
+      }
+    }
+    setPhotoUrl(newUrl);
+    if (newUrl) setError("");
+  };
+
   const handleStateChange = (newState: string) => {
     const validDistricts = getDistrictsForState(newState);
     setValues((p) => ({
@@ -343,6 +374,8 @@ const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     });
 
     notifyMemberRequestsUpdated();
+    isSavedRef.current = true;
+    unsavedUploadedUrlsRef.current = [];
     setShowSuccessPopup(true);
     setValues(resetForm());
     setPhotoUrl("");
@@ -655,10 +688,7 @@ const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
         <ContactPhotoUploader
           key={fileKey}
           value={photoUrl}
-          onChange={(url) => {
-            setPhotoUrl(url);
-            if (url) setError("");
-          }}
+          onChange={handlePhotoChange}
           locale={locale}
           required
         />

@@ -2,7 +2,8 @@
 
 import { ImageUploadField } from "@/components/admin/ui/image-upload-field";
 import type { CreateGalleryDto, GalleryItem, UpdateGalleryDto } from "@/lib/api/types";
-import { useState } from "react";
+import { deleteUploadedMedia } from "@/lib/api/uploads";
+import { useEffect, useRef, useState } from "react";
 
 interface GalleryItemModalProps {
   isOpen: boolean;
@@ -44,6 +45,52 @@ function GalleryItemModalForm({
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
+  // Track any image URLs that were uploaded during this session but not yet saved
+  const unsavedUploadedUrlsRef = useRef<string[]>([]);
+  const isSavedRef = useRef(false);
+
+  // Helper to cleanup unsaved uploaded media from Cloudinary
+  const cleanupUnsavedUploads = () => {
+    if (isSavedRef.current) return;
+    while (unsavedUploadedUrlsRef.current.length > 0) {
+      const urlToDelete = unsavedUploadedUrlsRef.current.pop();
+      if (urlToDelete && urlToDelete !== item?.photoUrl) {
+        deleteUploadedMedia(urlToDelete);
+      }
+    }
+  };
+
+  // Safe dismiss handler: cleans up unsaved Cloudinary uploads before closing
+  const handleDismiss = () => {
+    cleanupUnsavedUploads();
+    onClose();
+  };
+
+  // On unmount (e.g. navigation or component unmount without saving)
+  useEffect(() => {
+    return () => {
+      cleanupUnsavedUploads();
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [item?.photoUrl]);
+
+  const handlePhotoChange = (newUrl: string) => {
+    // If an image was previously uploaded in this session and is now replaced or cleared,
+    // immediately delete the previous unsaved image from Cloudinary
+    if (newUrl !== photoUrl) {
+      const prevUnsaved = unsavedUploadedUrlsRef.current.pop();
+      if (prevUnsaved && prevUnsaved !== item?.photoUrl) {
+        deleteUploadedMedia(prevUnsaved);
+      }
+
+      if (newUrl && newUrl !== item?.photoUrl) {
+        unsavedUploadedUrlsRef.current.push(newUrl);
+      }
+    }
+
+    setPhotoUrl(newUrl);
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!eventName.trim()) {
@@ -59,14 +106,17 @@ function GalleryItemModalForm({
     setError(null);
 
     try {
+      isSavedRef.current = true;
       await onSave({
         eventName: eventName.trim(),
         eventType: eventType.trim() || "General",
         photoUrl: photoUrl.trim(),
         source: item?.source || "cloud",
       });
+      unsavedUploadedUrlsRef.current = [];
       onClose();
     } catch (err: unknown) {
+      isSavedRef.current = false;
       const msg = err instanceof Error ? err.message : "Failed to save gallery item.";
       setError(msg);
     } finally {
@@ -83,7 +133,7 @@ function GalleryItemModalForm({
           </h2>
           <button
             type="button"
-            onClick={onClose}
+            onClick={handleDismiss}
             className="rounded-full p-1 text-[#64748b] hover:bg-[#f1f5f9] hover:text-[#0f172a] transition"
           >
             <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -136,7 +186,7 @@ function GalleryItemModalForm({
             <ImageUploadField
               label="Gallery Photo / Media"
               value={photoUrl}
-              onChange={(url) => setPhotoUrl(url)}
+              onChange={handlePhotoChange}
               category="gallery"
               helpText="Upload an image to backend storage"
             />
@@ -145,7 +195,7 @@ function GalleryItemModalForm({
           <div className="flex shrink-0 justify-end gap-3 pt-3 sm:pt-4 border-t border-[#e2e8f0]">
             <button
               type="button"
-              onClick={onClose}
+              onClick={handleDismiss}
               className="rounded-lg border border-[#cbd5e1] px-4 py-2 text-xs font-semibold text-[#475569] hover:bg-[#f1f5f9]"
             >
               Cancel

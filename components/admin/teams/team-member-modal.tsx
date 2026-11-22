@@ -5,7 +5,8 @@ import { EditableCombobox } from "@/components/ui/editable-combobox";
 import { INDIAN_STATES, getDistrictsForState } from "@/data/india-locations";
 import { COMMON_NGO_ROLES } from "@/data/team";
 import type { CreateTeamMemberDto, TeamMember, UpdateTeamMemberDto } from "@/lib/api/types";
-import { useState } from "react";
+import { deleteUploadedMedia } from "@/lib/api/uploads";
+import { useEffect, useRef, useState } from "react";
 
 interface TeamMemberModalProps {
   isOpen: boolean;
@@ -52,6 +53,50 @@ function TeamMemberModalForm({
   const [bio, setBio] = useState(member?.bio || "");
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
+
+  // Track any image URLs that were uploaded during this session but not yet saved
+  const unsavedUploadedUrlsRef = useRef<string[]>([]);
+  const isSavedRef = useRef(false);
+
+  // Helper to cleanup unsaved uploaded media from Cloudinary
+  const cleanupUnsavedUploads = () => {
+    if (isSavedRef.current) return;
+    while (unsavedUploadedUrlsRef.current.length > 0) {
+      const urlToDelete = unsavedUploadedUrlsRef.current.pop();
+      if (urlToDelete && urlToDelete !== member?.photoUrl) {
+        deleteUploadedMedia(urlToDelete);
+      }
+    }
+  };
+
+  // Safe dismiss handler: cleans up unsaved Cloudinary uploads before closing
+  const handleDismiss = () => {
+    cleanupUnsavedUploads();
+    onClose();
+  };
+
+  // On unmount (e.g. navigation or component unmount without saving)
+  useEffect(() => {
+    return () => {
+      cleanupUnsavedUploads();
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [member?.photoUrl]);
+
+  const handlePhotoChange = (newUrl: string) => {
+    if (newUrl !== photoUrl) {
+      const prevUnsaved = unsavedUploadedUrlsRef.current.pop();
+      if (prevUnsaved && prevUnsaved !== member?.photoUrl) {
+        deleteUploadedMedia(prevUnsaved);
+      }
+
+      if (newUrl && newUrl !== member?.photoUrl) {
+        unsavedUploadedUrlsRef.current.push(newUrl);
+      }
+    }
+
+    setPhotoUrl(newUrl);
+  };
 
   const handleStateChange = (val: string) => {
     setState(val);
@@ -112,6 +157,7 @@ function TeamMemberModalForm({
     setError(null);
 
     try {
+      isSavedRef.current = true;
       await onSave({
         fullName: fullName.trim(),
         role: role.trim() || undefined,
@@ -124,8 +170,10 @@ function TeamMemberModalForm({
         photoUrl: photoUrl.trim() || undefined,
         bio: bio.trim() || undefined,
       });
+      unsavedUploadedUrlsRef.current = [];
       onClose();
     } catch (err: unknown) {
+      isSavedRef.current = false;
       const msg = err instanceof Error ? err.message : "Failed to save team member.";
       setError(msg);
     } finally {
@@ -142,7 +190,7 @@ function TeamMemberModalForm({
           </h2>
           <button
             type="button"
-            onClick={onClose}
+            onClick={handleDismiss}
             className="rounded-full p-1 text-[#64748b] hover:bg-[#f1f5f9] hover:text-[#0f172a] transition"
           >
             <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -261,7 +309,7 @@ function TeamMemberModalForm({
               <ImageUploadField
                 label="Team Member Photo"
                 value={photoUrl}
-                onChange={(url) => setPhotoUrl(url)}
+                onChange={handlePhotoChange}
                 category="teams"
                 helpText="Upload the member photo to Cloudinary or backend storage"
               />
@@ -271,7 +319,7 @@ function TeamMemberModalForm({
           <div className="flex shrink-0 justify-end gap-3 pt-3 sm:pt-4 border-t border-[#e2e8f0]">
             <button
               type="button"
-              onClick={onClose}
+              onClick={handleDismiss}
               className="rounded-lg border border-[#cbd5e1] px-4 py-2 text-xs font-semibold text-[#475569] hover:bg-[#f1f5f9]"
             >
               Cancel

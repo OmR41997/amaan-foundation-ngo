@@ -8,7 +8,8 @@ import { ImageUploadField } from "@/components/admin/ui/image-upload-field";
 import { EditableCombobox } from "@/components/ui/editable-combobox";
 import { INDIAN_STATES, getDistrictsForState } from "@/data/india-locations";
 import { formatAadhaar, getAadhaarDigits } from "@/lib/formatters";
-import { useState } from "react";
+import { deleteUploadedMedia } from "@/lib/api/uploads";
+import { useEffect, useRef, useState } from "react";
 
 const GENDER_OPTIONS = ["Male", "Female", "Other"] as const;
 const BLOOD_GROUPS = ["A+", "A-", "B+", "B-", "AB+", "AB-", "O+", "O-"];
@@ -61,11 +62,56 @@ export function MemberRequestEditModal({
   const [error, setError] = useState("");
   const [declarationAccepted, setDeclarationAccepted] = useState(true);
 
+  // Track any image URLs uploaded in this session but not yet saved
+  const unsavedUploadedUrlsRef = useRef<string[]>([]);
+  const isSavedRef = useRef(false);
+
+  // Helper to cleanup unsaved uploaded media from Cloudinary
+  const cleanupUnsavedUploads = () => {
+    if (isSavedRef.current) return;
+    while (unsavedUploadedUrlsRef.current.length > 0) {
+      const urlToDelete = unsavedUploadedUrlsRef.current.pop();
+      if (urlToDelete && urlToDelete !== record.photoUrl) {
+        deleteUploadedMedia(urlToDelete);
+      }
+    }
+  };
+
+  // Safe dismiss handler: cleans up unsaved Cloudinary uploads before closing
+  const handleDismiss = () => {
+    cleanupUnsavedUploads();
+    onClose();
+  };
+
+  // On unmount (e.g. navigation or component unmount without saving)
+  useEffect(() => {
+    return () => {
+      cleanupUnsavedUploads();
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [record.photoUrl]);
+
   if (record.id !== prevRecordId) {
+    cleanupUnsavedUploads();
     setPrevRecordId(record.id);
     setForm(toFormState(record));
     setDeclarationAccepted(true);
+    isSavedRef.current = false;
   }
+
+  const handlePhotoChange = (newUrl: string) => {
+    if (newUrl !== form.photoUrl) {
+      const prevUnsaved = unsavedUploadedUrlsRef.current.pop();
+      if (prevUnsaved && prevUnsaved !== record.photoUrl) {
+        deleteUploadedMedia(prevUnsaved);
+      }
+
+      if (newUrl && newUrl !== record.photoUrl) {
+        unsavedUploadedUrlsRef.current.push(newUrl);
+      }
+    }
+    set("photoUrl", newUrl);
+  };
 
   const handleStateChange = (stateVal: string) => {
     setForm((prev) => {
@@ -136,6 +182,7 @@ export function MemberRequestEditModal({
 
     setSaving(true);
     try {
+      isSavedRef.current = true;
       await updateMemberRequest(record.id, {
         name: form.name.trim(),
         city: form.city.trim() || undefined,
@@ -160,10 +207,12 @@ export function MemberRequestEditModal({
         place: form.place.trim() || undefined,
         date: form.date,
       });
+      unsavedUploadedUrlsRef.current = [];
       showToast("Record updated successfully", "success");
       onSaved();
       onClose();
     } catch (err) {
+      isSavedRef.current = false;
       showToast(err instanceof ApiError ? err.message : "Update failed", "error");
     } finally {
       setSaving(false);
@@ -185,7 +234,7 @@ export function MemberRequestEditModal({
           </div>
           <button
             type="button"
-            onClick={onClose}
+            onClick={handleDismiss}
             className="rounded-full p-1 text-[#64748b] hover:bg-[#f1f5f9] hover:text-[#0f172a] transition"
           >
             <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -419,7 +468,7 @@ export function MemberRequestEditModal({
             <ImageUploadField
               label="Member Photo"
               value={form.photoUrl}
-              onChange={(url) => set("photoUrl", url)}
+              onChange={handlePhotoChange}
               category="members"
               helpText="Upload the member photo to Cloudinary or backend storage"
             />
@@ -444,7 +493,7 @@ export function MemberRequestEditModal({
           <div className="flex shrink-0 flex-wrap justify-end gap-3 border-t border-[#d7e4ef] pt-3 sm:pt-4">
             <button
               type="button"
-              onClick={onClose}
+              onClick={handleDismiss}
               className="rounded-lg border border-[#d7e4ef] px-4 py-2 text-sm font-medium"
             >
               Cancel
