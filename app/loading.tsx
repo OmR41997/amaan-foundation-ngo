@@ -19,7 +19,7 @@ export default function Loading() {
           <div className="site-loading__logo-disc">
             <img
               className="site-loading__logo"
-              src="/images/logo/TransparentLogo.png"
+              src="/images/logo/logo.png"
               alt="Amaan Ansari Welfare Foundation"
               width={72}
               height={72}
@@ -30,7 +30,7 @@ export default function Loading() {
         {/* Brand identity badge */}
         <div className="site-loading__badge">
           <span className="site-loading__badge-dot" aria-hidden="true" />
-          <span className="site-loading__eyebrow">AMAAN ANSARI MEMORIAL</span>
+          <span className="site-loading__eyebrow">AMAAN ANSARI WELFARE FOUNDATION</span>
         </div>
 
         {/* Poetic loading headline */}
