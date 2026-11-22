@@ -24,27 +24,27 @@ export default async function WhatWeDoPage({
   const labels =
     locale === "hi"
       ? {
-          subtitle:
-            "हमारे कार्यक्रम तात्कालिक मदद के साथ-साथ सम्मानपूर्ण और दीर्घकालिक सामाजिक बदलाव पर केंद्रित हैं।",
-          processTitle: "हम कैसे काम करते हैं",
-          process: [
-            "समुदाय की जरूरतों की पहचान और सुनवाई",
-            "स्थानीय टीम और स्वयंसेवकों के साथ योजना",
-            "पारदर्शी क्रियान्वयन और फॉलो-अप सहायता",
-          ],
-          sectionTag: "सामाजिक प्रभाव",
-        }
+        subtitle:
+          "हमारे कार्यक्रम तात्कालिक मदद के साथ-साथ सम्मानपूर्ण और दीर्घकालिक सामाजिक बदलाव पर केंद्रित हैं।",
+        processTitle: "हम कैसे काम करते हैं",
+        process: [
+          "समुदाय की जरूरतों की पहचान और सुनवाई",
+          "स्थानीय टीम और स्वयंसेवकों के साथ योजना",
+          "पारदर्शी क्रियान्वयन और फॉलो-अप सहायता",
+        ],
+        sectionTag: "सामाजिक प्रभाव",
+      }
       : {
-          subtitle:
-            "Our interventions combine immediate relief with dignity-first, long-term social development for vulnerable communities.",
-          processTitle: "How We Work",
-          process: [
-            "Listen and map real community needs",
-            "Co-design interventions with field teams and volunteers",
-            "Deliver transparently with follow-up support",
-          ],
-          sectionTag: "Social Impact",
-        };
+        subtitle:
+          "Our interventions combine immediate relief with dignity-first, long-term social development for vulnerable communities.",
+        processTitle: "How We Work",
+        process: [
+          "Listen and map real community needs",
+          "Co-design interventions with field teams and volunteers",
+          "Deliver transparently with follow-up support",
+        ],
+        sectionTag: "Social Impact",
+      };
 
   return (
     <div className="section-shell space-y-10 pt-10 sm:pt-12 md:pt-16 pb-16 md:pb-20">
@@ -57,7 +57,7 @@ export default async function WhatWeDoPage({
           </div>
           <div className="relative h-56 overflow-hidden rounded-2xl md:h-72">
             <Image
-              src="/images/initiatives/whatwedo.png"
+              src="/images/setting/whatwedo.png"
               alt="Volunteers helping families in community outreach"
               fill
               className="object-cover"
