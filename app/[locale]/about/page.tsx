@@ -1,9 +1,10 @@
 import { Reveal } from "@/components/motion/transitions";
 import { AppLocale } from "@/i18n/routing";
 import { getTranslations, setRequestLocale } from "next-intl/server";
-import Image from "next/image";
 import Link from "next/link";
 import { Icon } from "@/components/ui/icons";
+import { FounderImage } from "@/components/ui/founder-image";
+import { getFounderPresidentImage } from "@/lib/api/teams";
 import type { Metadata } from "next";
 
 export async function generateMetadata({
@@ -38,6 +39,7 @@ export default async function AboutPage({
   const isHindi = locale === "hi";
 
   const founderAlt = isHindi ? "संस्थापक अलीम अंसारी" : "Founder Alim Ansari portrait";
+  const founderImage = await getFounderPresidentImage();
 
   const coreValues = isHindi
     ? [
@@ -119,10 +121,10 @@ export default async function AboutPage({
       <Reveal delay={0.05}>
         <section className="grid gap-8 rounded-3xl border border-[var(--line)] bg-[var(--card)] p-6 sm:p-8 md:grid-cols-[0.8fr_1.2fr] md:p-10 shadow-xs items-center">
           <div className="relative h-80 sm:h-96 md:h-[460px] w-full overflow-hidden rounded-2xl border border-[var(--line)] bg-[var(--bg)] shadow-xs">
-            <Image
-              src="/images/team/alim.jpeg"
+            <FounderImage
+              initialSrc={founderImage}
               alt={founderAlt}
-              fill
+              priority
               className="object-contain p-2"
               sizes="(max-width: 768px) 100vw, 40vw"
             />

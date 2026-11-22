@@ -4,6 +4,7 @@ import { getTranslations, setRequestLocale } from "next-intl/server";
 import type { Metadata } from "next";
 import { HomeView } from "@/components/home/home-view";
 import { fetchInitiativesPrograms } from "@/lib/api/initiatives-programs";
+import { getFounderPresidentImage } from "@/lib/api/teams";
 
 export async function generateMetadata({
   params,
@@ -34,6 +35,7 @@ export default async function HomePage({
   const visionParagraphs = (t.raw("vision.paragraphs") as string[]) || [];
   const objectiveAreas = (t.raw("objectives.areas") as string[]) || [];
   const founderAlt = locale === "hi" ? "संस्थापक अलीम अंसारी" : "Founder Alim Ansari portrait";
+  const founderImage = await getFounderPresidentImage();
 
   const data = getContent(locale);
 
@@ -164,6 +166,7 @@ export default async function HomePage({
         role: tAbout("labels.founderRole"),
         bio: tAbout("labels.founderBio"),
         alt: founderAlt,
+        image: founderImage,
       }}
       objectives={{
         title: t("objectives.title"),

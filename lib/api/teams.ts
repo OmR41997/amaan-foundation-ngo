@@ -4,6 +4,13 @@ import type {
   TeamMember,
   UpdateTeamMemberDto,
 } from "./types";
+import {
+  teamMembers as staticTeamMembers,
+  DEFAULT_FOUNDER_IMAGE,
+  DEFAULT_FOUNDER_ROLE,
+} from "@/data/team";
+
+export { DEFAULT_FOUNDER_IMAGE, DEFAULT_FOUNDER_ROLE };
 
 export interface TeamMemberQuery {
   page?: number;
@@ -25,11 +32,11 @@ export async function fetchTeamMembers(query: TeamMemberQuery = {}) {
     }
   });
   const qs = params.toString();
-  return apiFetch<TeamMember[]>(`/teams${qs ? `?${qs}` : ""}`);
+  return apiFetch<TeamMember[]>(`/teams${qs ? `?${qs}` : ""}`, {}, false);
 }
 
 export async function fetchTeamMemberById(id: string) {
-  return apiFetch<TeamMember>(`/teams/${id}`);
+  return apiFetch<TeamMember>(`/teams/${id}`, {}, false);
 }
 
 export async function createTeamMember(data: CreateTeamMemberDto) {
@@ -50,4 +57,72 @@ export async function deleteTeamMember(id: string) {
   return apiFetch<TeamMember>(`/teams/${id}`, {
     method: "DELETE",
   });
+}
+
+export function resolveFounderImageFromMembers(
+  members: Array<{ role?: string; photoUrl?: string; imageFile?: string }>
+): string | null {
+  if (!Array.isArray(members) || members.length === 0) return null;
+
+  // Filter members matching default founder role
+  const exactFounders = members.filter((m) => {
+    const role = (m.role || "").trim().toLowerCase();
+    return (
+      role === DEFAULT_FOUNDER_ROLE.toLowerCase() ||
+      (role.includes("founder") && role.includes("president"))
+    );
+  });
+
+  const candidates =
+    exactFounders.length > 0
+      ? exactFounders
+      : members.filter((m) => {
+          const role = (m.role || "").trim().toLowerCase();
+          return role.includes("founder");
+        });
+
+  if (candidates.length === 0) return null;
+
+  // Ensure "last one image" of Founder & President is used
+  const lastFounder = candidates[candidates.length - 1];
+
+  if (lastFounder.photoUrl && lastFounder.photoUrl.trim()) {
+    const url = lastFounder.photoUrl.trim();
+    if (url.startsWith("http://") || url.startsWith("https://")) return url;
+    if (url.startsWith("/images/team/")) return url;
+    if (url.startsWith("/team/")) return `/images${url}`;
+    if (url.startsWith("/")) return url;
+    return `/images/team/${url}`;
+  }
+
+  if (lastFounder.imageFile && lastFounder.imageFile.trim()) {
+    const file = lastFounder.imageFile.trim();
+    if (file.startsWith("http://") || file.startsWith("https://")) return file;
+    if (file.startsWith("/")) return file;
+    return `/images/team/${file}`;
+  }
+
+  return null;
+}
+
+export async function getFounderPresidentImage(): Promise<string> {
+  try {
+    const res = await fetchTeamMembers({ limit: 100 });
+    if (res?.data && Array.isArray(res.data) && res.data.length > 0) {
+      const resolved = resolveFounderImageFromMembers(res.data);
+      if (resolved) {
+        return resolved;
+      }
+    }
+  } catch (err) {
+    console.error("Could not fetch team members for founder image:", err);
+  }
+
+  // Fallback to static team definitions in data/team.ts (last one image of Founder & President)
+  const staticResolved = resolveFounderImageFromMembers(staticTeamMembers);
+  if (staticResolved) {
+    return staticResolved;
+  }
+
+  return DEFAULT_FOUNDER_IMAGE;
 }

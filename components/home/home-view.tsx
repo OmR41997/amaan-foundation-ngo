@@ -7,6 +7,7 @@ import { DonationModal } from "@/components/ui/donation-modal";
 import { LightboxModal } from "@/components/ui/lightbox-modal";
 import { Link } from "@/i18n/navigation";
 import { ImpactStairs } from "@/components/home/impact-slider";
+import { FounderImage } from "@/components/ui/founder-image";
 
 // 3D Tilt Card Component
 function TiltCard({
@@ -121,6 +122,7 @@ export interface HomeViewProps {
     role: string;
     bio: string;
     alt: string;
+    image?: string;
   };
   objectives: {
     title: string;
@@ -437,10 +439,10 @@ export function HomeView({
         {/* Section: Founder Profile */}
         <section className="rv grid gap-8 rounded-3xl border border-[var(--line)] bg-[var(--card)] p-6 md:grid-cols-[0.75fr_1.25fr] md:p-10 shadow-sm">
           <div className="relative h-80 sm:h-96 md:h-[440px] overflow-hidden rounded-2xl border border-[var(--line)] bg-[var(--bg)] shadow-xs">
-            <Image
-              src="/images/team/alim.jpeg"
+            <FounderImage
+              initialSrc={founder.image}
               alt={founder.alt}
-              fill
+              priority
               className="object-contain p-2"
               sizes="(max-width: 768px) 100vw, 40vw"
             />
