@@ -3,6 +3,7 @@ import { AppLocale } from "@/i18n/routing";
 import { getTranslations, setRequestLocale } from "next-intl/server";
 import type { Metadata } from "next";
 import { HomeView } from "@/components/home/home-view";
+import { fetchInitiativesPrograms } from "@/lib/api/initiatives-programs";
 
 export async function generateMetadata({
   params,
@@ -81,84 +82,31 @@ export default async function HomePage({
           },
         ];
 
-  const impactSections =
-    locale === "hi"
-      ? [
-          {
-            title: "समुदाय स्वास्थ्य पहल",
-            description:
-              "हम स्वास्थ्य शिविर, बुनियादी जांच और दवा सहायता के माध्यम से जरूरतमंद परिवारों तक समय पर चिकित्सा सहयोग पहुंचाते हैं।",
-            image: "/images/initiatives/community-healthcare-initiatives.png",
-          },
-          {
-            title: "शिक्षा और मार्गदर्शन कार्यक्रम",
-            description:
-              "हम बच्चों और युवाओं के लिए किताबें, स्कॉलरशिप और सीखने का सहयोग उपलब्ध कराते हैं ताकि शिक्षा का सफर बीच में न रुके।",
-            image: "/images/initiatives/education-mentorship-program.png",
-          },
-          {
-            title: "महिला सशक्तिकरण और आजीविका",
-            description:
-              "कौशल प्रशिक्षण और सामुदायिक सहयोग के जरिए महिलाओं को आर्थिक रूप से मजबूत और आत्मनिर्भर बनाने पर हमारा ध्यान है।",
-            image: "/images/initiatives/women-empowerment-livelihood.png",
-          },
-          {
-            title: "खिदमत-ए-खल्क (राहत एवं जनसेवा)",
-            description:
-              "आपातकालीन सहायता, राशन वितरण और प्राकृतिक आपदाओं के समय जरूरतमंदों तक तत्काल मानवीय राहत पहुंचाना।",
-            image: "/images/initiatives/khidtmat-a-khalk.png",
-          },
-          {
-            title: "बाल कल्याण एवं पोषण विकास",
-            description:
-              "कमजोर वर्ग के बच्चों को पोषण, सुरक्षा और सर्वांगीण विकास के अवसर प्रदान कर उनके उज्ज्वल भविष्य का निर्माण।",
-            image: "/images/initiatives/whatwedo.png",
-          },
-          {
-            title: "कौशल विकास एवं स्वावलंबन",
-            description:
-              "युवाओं और महिलाओं के लिए व्यावसायिक प्रशिक्षण और आत्मनिर्भर रोजगार के नए अवसर तैयार करना।",
-            image: "/images/initiatives/womenempowerment.jpg",
-          },
-        ]
-      : [
-          {
-            title: "Community Healthcare Initiatives",
-            description:
-              "Through regular health camps, basic screenings and medicine support, we bring timely medical care to families who need it most.",
-            image: "/images/initiatives/community-healthcare-initiatives.png",
-          },
-          {
-            title: "Educational and Mentorship Programs",
-            description:
-              "We support children and youth with books, scholarships and learning guidance so their education journey continues with confidence.",
-            image: "/images/initiatives/education-mentorship-program.png",
-          },
-          {
-            title: "Women Empowerment and Livelihood",
-            description:
-              "Our training and local support pathways help women build sustainable income opportunities and long-term self-reliance.",
-            image: "/images/initiatives/women-empowerment-livelihood.png",
-          },
-          {
-            title: "Khidmat-e-Khalq & Relief Support",
-            description:
-              "Providing immediate humanitarian relief, essential supplies, and emergency support during natural calamities and hardships.",
-            image: "/images/initiatives/khidtmat-a-khalk.png",
-          },
-          {
-            title: "Child Welfare & Nutrition Development",
-            description:
-              "Promoting child healthcare, nutritional well-being, and safe, encouraging spaces for underprivileged young minds to learn.",
-            image: "/images/initiatives/whatwedo.png",
-          },
-          {
-            title: "Vocational Skills & Self-Reliance",
-            description:
-              "Equipping youth and community members with practical skills and guidance toward sustainable self-employment.",
-            image: "/images/initiatives/womenempowerment.jpg",
-          },
-        ];
+  let impactSections: Array<{
+    title: string;
+    description: string;
+    image: string;
+  }> = [];
+
+  try {
+    const res = await fetchInitiativesPrograms({
+      page: 1,
+      limit: 6,
+      isPublished: true,
+      sortBy: "createdAt",
+      order: "desc",
+    });
+
+    if (res?.data && Array.isArray(res.data)) {
+      impactSections = res.data.map((item) => ({
+        title: item.title,
+        description: item.description,
+        image: item.photoUrl,
+      }));
+    }
+  } catch (err) {
+    console.error("Could not load initiatives programs from API:", err);
+  }
 
   const certificates = [
     {

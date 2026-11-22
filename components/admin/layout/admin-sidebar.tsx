@@ -38,6 +38,12 @@ function NavIcon({ name }: { name?: string }) {
           <polyline points="21 15 16 10 5 21" />
         </svg>
       );
+    case "initiatives":
+      return (
+        <svg className={common} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+          <path strokeLinecap="round" strokeLinejoin="round" d="M13 10V3L4 14h7v7l9-11h-7z" />
+        </svg>
+      );
     case "settings":
       return (
         <svg className={common} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">

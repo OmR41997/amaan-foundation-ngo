@@ -1,0 +1,38 @@
+[
+  {
+    "title": "Community Healthcare Initiatives",
+    "description": "Through regular health camps, basic screenings and medicine support, we bring timely medical care to families who need it most.",
+    "photoUrl": "https://res.cloudinary.com/l8mcesge/image/upload/initiatives/community-healthcare-initiatives.png",
+    "isPublished": true
+  },
+  {
+    "title": "Educational and Mentorship Programs",
+    "description": "We support children and youth with books, scholarships and learning guidance so their education journey continues with confidence.",
+    "photoUrl": "https://res.cloudinary.com/l8mcesge/image/upload/initiatives/education-mentorship-program.png",
+    "isPublished": true
+  },
+  {
+    "title": "Women Empowerment and Livelihood",
+    "description": "Our training and local support pathways help women build sustainable income opportunities and long-term self-reliance.",
+    "photoUrl": "https://res.cloudinary.com/l8mcesge/image/upload/initiatives/women-empowerment-livelihood.png",
+    "isPublished": true
+  },
+  {
+    "title": "Khidmat-e-Khalq & Relief Support",
+    "description": "Providing immediate humanitarian relief, essential supplies, and emergency support during natural calamities and hardships.",
+    "photoUrl": "https://res.cloudinary.com/l8mcesge/image/upload/initiatives/khidtmat-a-khalk.png",
+    "isPublished": true
+  },
+  {
+    "title": "Child Welfare & Nutrition Development",
+    "description": "Promoting child healthcare, nutritional well-being, and safe, encouraging spaces for underprivileged young minds to learn.",
+    "photoUrl": "https://res.cloudinary.com/l8mcesge/image/upload/initiatives/whatwedo.png",
+    "isPublished": true
+  },
+  {
+    "title": "Vocational Skills & Self-Reliance",
+    "description": "Equipping youth and community members with practical skills and guidance toward sustainable self-employment.",
+    "photoUrl": "https://res.cloudinary.com/l8mcesge/image/upload/initiatives/womenempowerment.jpg",
+    "isPublished": true
+  }
+]

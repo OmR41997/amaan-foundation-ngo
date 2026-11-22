@@ -245,4 +245,33 @@ export interface DashboardOverviewData {
   recentRequests?: RecentMemberRequestItem[];
 }
 
+export interface InitiativesProgram {
+  id: string;
+  title: string;
+  description: string;
+  photoUrl: string;
+  isPublished?: boolean;
+  createdAt?: string;
+  updatedAt?: string;
+}
+
+export interface CreateInitiativesProgramDto {
+  title: string;
+  description: string;
+  photoUrl: string;
+  isPublished?: boolean;
+}
+
+export type UpdateInitiativesProgramDto = Partial<CreateInitiativesProgramDto>;
+
+export interface QueryInitiativesProgramsDto {
+  page?: number;
+  limit?: number;
+  search?: string;
+  title?: string;
+  isPublished?: boolean | "true" | "false";
+  sortBy?: "createdAt" | "updatedAt" | "title" | "isPublished";
+  order?: "asc" | "desc" | "1" | "-1";
+}
+
 

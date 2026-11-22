@@ -9,6 +9,7 @@ const labelMap: Record<string, string> = {
   "member-requests": "All Requests",
   teams: "Teams",
   gallery: "Gallery",
+  "initiatives-programs": "Initiatives & Programs",
   "change-password": "Change Password",
   login: "Login",
 };

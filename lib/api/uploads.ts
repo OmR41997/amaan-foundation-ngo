@@ -145,3 +145,34 @@ export async function uploadSingleFileToBackend(
 
   return payload;
 }
+
+/**
+ * Deletes an uploaded media asset from Cloudinary via the backend API.
+ * Accepts a Cloudinary URL or public ID.
+ */
+export async function deleteUploadedMedia(urlOrPublicId: string): Promise<boolean> {
+  if (!urlOrPublicId || !urlOrPublicId.trim()) return false;
+
+  try {
+    const headers: Record<string, string> = {
+      "Content-Type": "application/json",
+    };
+    const token = getToken();
+    if (token) {
+      headers.Authorization = `Bearer ${token}`;
+    }
+
+    const res = await fetch(
+      `${API_URL}/uploads?url=${encodeURIComponent(urlOrPublicId.trim())}`,
+      {
+        method: "DELETE",
+        headers,
+      },
+    );
+
+    return res.ok;
+  } catch (err) {
+    console.warn("Failed to delete media asset from Cloudinary:", err);
+    return false;
+  }
+}

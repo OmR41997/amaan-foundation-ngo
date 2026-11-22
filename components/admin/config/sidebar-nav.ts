@@ -41,6 +41,11 @@ export const adminNavSections: NavSection[] = [
         href: "/admin/gallery",
         icon: "gallery",
       },
+      {
+        label: "Initiatives & Programs",
+        href: "/admin/initiatives-programs",
+        icon: "initiatives",
+      },
     ],
   },
   {
