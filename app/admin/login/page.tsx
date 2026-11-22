@@ -56,7 +56,7 @@ export default function AdminLoginPage() {
         <div className="mb-8 text-center">
           <div className="mx-auto mb-4 flex h-28 w-28 items-center justify-center rounded-2xl border border-[#d7e4ef] bg-white p-1.5 shadow-sm">
             <Image
-              src="/images/logo/TransparentLogo.png"
+              src="/images/logo/logo.png"
               alt="Amaan Ansari Welfare Foundation logo"
               width={88}
               height={88}

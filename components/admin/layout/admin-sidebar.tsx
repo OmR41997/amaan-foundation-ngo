@@ -144,7 +144,7 @@ export function AdminSidebar({
               }`}
             >
               <Image
-                src="/images/logo/TransparentLogo.png"
+                src="/images/logo/logo.png"
                 alt="Amaan Ansari Welfare Foundation logo"
                 width={36}
                 height={36}
