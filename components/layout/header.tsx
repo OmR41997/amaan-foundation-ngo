@@ -42,6 +42,20 @@ export function Header({ locale }: { locale: AppLocale }) {
     }
   }, []);
 
+  useEffect(() => {
+    setIsMobileMenuOpen(false);
+  }, [pathname]);
+
+  useEffect(() => {
+    const handleResize = () => {
+      if (window.innerWidth >= 1280) {
+        setIsMobileMenuOpen(false);
+      }
+    };
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
+
   const toggleTheme = () => {
     const next = theme === "dark" ? "light" : "dark";
     setTheme(next);
@@ -80,7 +94,7 @@ export function Header({ locale }: { locale: AppLocale }) {
             </span>
           </Link>
 
-          <nav className="main-nav" aria-label="Main Navigation">
+          <nav className="main-nav hidden xl:flex" aria-label="Main Navigation">
             {navLinks.map((link) => {
               const href = link.href || "/";
               const active = isLinkActive(href);
@@ -124,7 +138,7 @@ export function Header({ locale }: { locale: AppLocale }) {
               aria-label="Toggle navigation menu"
               aria-expanded={isMobileMenuOpen}
               onClick={() => setIsMobileMenuOpen((prev) => !prev)}
-              className="inline-flex h-8.5 w-8.5 sm:h-9 sm:w-9 shrink-0 items-center justify-center rounded-full border border-[var(--line)] bg-[var(--card)] text-[var(--ink)] lg:hidden shadow-2xs hover:bg-[var(--mint)] transition cursor-pointer"
+              className="inline-flex h-8.5 w-8.5 sm:h-9 sm:w-9 shrink-0 items-center justify-center rounded-full border border-[var(--line)] bg-[var(--card)] text-[var(--ink)] xl:hidden shadow-2xs hover:bg-[var(--mint)] transition cursor-pointer"
             >
               <svg className="h-4.5 w-4.5 sm:h-5 sm:w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 {isMobileMenuOpen ? (
@@ -139,7 +153,7 @@ export function Header({ locale }: { locale: AppLocale }) {
 
         {/* Mobile Navigation Dropdown */}
         {isMobileMenuOpen && (
-          <div className="border-t border-[var(--line)] bg-[var(--card)] px-4 sm:px-6 py-4 lg:hidden space-y-1.5 shadow-xl backdrop-blur-md">
+          <div className="border-t border-[var(--line)] bg-[var(--card)] px-4 sm:px-6 py-4 xl:hidden space-y-1.5 shadow-xl backdrop-blur-md">
             {navLinks.map((link) => {
               const href = link.href || "/";
               const active = isLinkActive(href);
