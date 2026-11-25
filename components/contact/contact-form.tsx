@@ -3,6 +3,7 @@
 import { AppLocale } from "@/i18n/routing";
 import { submitMemberRequest } from "@/lib/api/member-requests";
 import { ApiError } from "@/lib/api/client";
+import { checkBackendHealth } from "@/lib/api/health";
 import { deleteUploadedMedia } from "@/lib/api/uploads";
 import { useEffect, useRef, useState } from "react";
 import { ContactPhotoUploader } from "@/components/contact/contact-photo-uploader";
@@ -18,7 +19,7 @@ const GENDER_OPTIONS = [
 const BLOOD_GROUPS = ["A+", "A-", "B+", "B-", "AB+", "AB-", "O+", "O-"];
 
 const inputClass =
-  "w-full rounded-xl border border-[var(--line)] bg-white dark:bg-[#0c2017] dark:border-white/15 px-4 py-3 text-sm text-[#0f172a] dark:text-[#e6f1ea] placeholder-[#94a3b8] dark:placeholder-emerald-200/40 outline-none transition focus:border-[var(--primary)] focus:ring-1 focus:ring-[var(--primary)]/30";
+  "w-full rounded-xl border border-[var(--line)] bg-white dark:bg-[#0c2017] dark:border-white/15 px-4 py-3 text-sm text-[#0f172a] dark:text-[#e6f1ea] placeholder-[#94a3b8] dark:placeholder-emerald-200/40 outline-none transition focus:border-[var(--primary)] focus:ring-1 focus:ring-[var(--primary)]/30 disabled:cursor-not-allowed disabled:opacity-60 disabled:bg-slate-100 dark:disabled:bg-[#07150f]";
 
 function FieldLabel({
   children,
@@ -337,61 +338,83 @@ export function ContactForm({ locale }: { locale: AppLocale }) {
     date: "",
     
   });
-     const [fileKey, setFileKey] = useState(0);
+  const [fileKey, setFileKey] = useState(0);
+  const [isOffline, setIsOffline] = useState(false);
 
-const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
-  event.preventDefault();
-  if (!validate()) return;
-
-  setIsSubmitting(true);
-  setError("");
-
-  try {
-    await submitMemberRequest({
-      name: values.name.trim(),
-      city: values.city.trim() || undefined,
-      dob: values.dob,
-      age: values.age.trim() || undefined,
-      gender: values.gender,
-      bloodGroup: values.bloodGroup,
-      aadhaar: getAadhaarDigits(values.aadhaar),
-      mobile: values.mobile.replace(/\D/g, ""),
-      email: values.email.trim() || undefined,
-      education: values.education.trim() || undefined,
-      profession: values.profession.trim() || undefined,
-      currentAddress: values.currentAddress.trim(),
-      district: values.district.trim(),
-      tehsil: values.tehsil.trim(),
-      division: values.division.trim(),
-      state: values.state.trim(),
-      pinCode: values.pinCode.replace(/\D/g, ""),
-      referenceNo: values.referenceNo.trim() || undefined,
-      declarationConsent: values.declarationConsent,
-      membershipType: values.membershipType,
-      place: values.place.trim() || undefined,
-      date: values.date,
-      photoUrl: photoUrl.trim(),
+  useEffect(() => {
+    checkBackendHealth().then((res) => {
+      if (!res.online) setIsOffline(true);
     });
+  }, []);
 
-    notifyMemberRequestsUpdated();
-    isSavedRef.current = true;
-    unsavedUploadedUrlsRef.current = [];
-    setShowSuccessPopup(true);
-    setValues(resetForm());
-    setPhotoUrl("");
-    setFileKey((prev) => prev + 1);
-  } catch (err) {
+  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    if (isOffline) {
+      setError("Server is currently unavailable. Please try again later.");
+      return;
+    }
+    if (!validate()) return;
+
+    setIsSubmitting(true);
+    setError("");
+
+    try {
+      await submitMemberRequest({
+        name: values.name.trim(),
+        city: values.city.trim() || undefined,
+        dob: values.dob,
+        age: values.age.trim() || undefined,
+        gender: values.gender,
+        bloodGroup: values.bloodGroup,
+        aadhaar: getAadhaarDigits(values.aadhaar),
+        mobile: values.mobile.replace(/\D/g, ""),
+        email: values.email.trim() || undefined,
+        education: values.education.trim() || undefined,
+        profession: values.profession.trim() || undefined,
+        currentAddress: values.currentAddress.trim(),
+        district: values.district.trim(),
+        tehsil: values.tehsil.trim(),
+        division: values.division.trim(),
+        state: values.state.trim(),
+        pinCode: values.pinCode.replace(/\D/g, ""),
+        referenceNo: values.referenceNo.trim() || undefined,
+        declarationConsent: values.declarationConsent,
+        membershipType: values.membershipType,
+        place: values.place.trim() || undefined,
+        date: values.date,
+        photoUrl: photoUrl.trim(),
+      });
+
+      notifyMemberRequestsUpdated();
+      isSavedRef.current = true;
+      unsavedUploadedUrlsRef.current = [];
+      setShowSuccessPopup(true);
+      setValues(resetForm());
+      setPhotoUrl("");
+      setFileKey((prev) => prev + 1);
+    } catch (err) {
+      const isUnavailable =
+        err instanceof ApiError &&
+        (err.status === 503 ||
+          err.status === 504 ||
+          err.message?.toLowerCase().includes("failed to connect") ||
+          err.message?.toLowerCase().includes("unavailable"));
+      if (isUnavailable) {
+        setIsOffline(true);
+      }
       setError(
-        err instanceof ApiError
-          ? err.message
-          : locale === "hi"
-            ? "फॉर्म जमा करने में समस्या हुई। कृपया पुनः प्रयास करें।"
-            : "Could not submit the form. Please try again.",
+        isUnavailable
+          ? "Server is currently unavailable. Please try again later."
+          : err instanceof ApiError
+            ? err.message
+            : locale === "hi"
+              ? "फॉर्म जमा करने में समस्या हुई। कृपया पुनः प्रयास करें।"
+              : "Could not submit the form. Please try again.",
       );
-  } finally {
-    setIsSubmitting(false);
-  }
-};
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
 
   return (
     <form
@@ -401,6 +424,20 @@ const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
       <h2 className="text-2xl md:text-3xl font-bold text-[var(--ink)]">{labels.title}</h2>
       <p className="mt-2 text-sm text-[var(--muted)]">{labels.subtitle}</p>
 
+      {isOffline && (
+        <div className="mt-4 rounded-2xl border border-rose-300 bg-rose-50/90 dark:bg-rose-950/40 p-4 text-center">
+          <p className="text-sm font-semibold text-rose-700 dark:text-rose-300">
+            Server is currently unavailable. Please try again later.
+          </p>
+        </div>
+      )}
+
+      <fieldset
+        disabled={isOffline || isSubmitting}
+        className={`contents space-y-0 border-none p-0 m-0 ${
+          isOffline || isSubmitting ? "cursor-not-allowed opacity-60 [&_*]:cursor-not-allowed" : ""
+        }`}
+      >
       <div className="mt-6 grid gap-4 md:grid-cols-2">
         <div className="space-y-1">
           <FieldLabel required>{labels.name}</FieldLabel>
@@ -691,18 +728,23 @@ const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
           onChange={handlePhotoChange}
           locale={locale}
           required
+          disabled={isOffline || isSubmitting}
         />
       </div>
 
       <div className="mt-6 rounded-2xl border border-[var(--line)] bg-[var(--card)] p-4">
         <p className="text-sm font-semibold text-[var(--ink)]">{labels.declaration}</p>
         <p className="mt-2 text-sm leading-relaxed text-[var(--muted)]">{labels.declarationText}</p>
-        <label className="mt-3 flex items-start gap-2 text-sm text-[var(--ink)] cursor-pointer">
+        <label
+          className={`mt-3 flex items-start gap-2 text-sm text-[var(--ink)] ${
+            isOffline || isSubmitting ? "cursor-not-allowed" : "cursor-pointer"
+          }`}
+        >
           <input
             type="checkbox"
             checked={values.declarationConsent}
             onChange={(e) => setValues((p) => ({ ...p, declarationConsent: e.target.checked }))}
-            className="mt-0.5 h-4 w-4 rounded border-[var(--line)] accent-[var(--primary)]"
+            className="mt-0.5 h-4 w-4 rounded border-[var(--line)] accent-[var(--primary)] disabled:cursor-not-allowed"
           />
           <span className="font-medium">
             {labels.declaration}
@@ -710,17 +752,24 @@ const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
           </span>
         </label>
       </div>
+      </fieldset>
 
       <button
         type="submit"
-        disabled={isSubmitting}
-        className="mt-6 rounded-full bg-[var(--primary)] px-6 py-3 text-sm font-semibold text-white transition hover:opacity-90 disabled:opacity-60 cursor-pointer"
+        disabled={isOffline || isSubmitting}
+        className={`mt-6 rounded-full px-6 py-3 text-sm font-semibold transition ${
+          isOffline || isSubmitting
+            ? "cursor-not-allowed opacity-60 bg-slate-400 dark:bg-slate-700 text-slate-100 dark:text-slate-300"
+            : "bg-[var(--primary)] text-white hover:opacity-90 cursor-pointer"
+        }`}
       >
-        {isSubmitting
-          ? locale === "hi"
-            ? "जमा हो रहा है..."
-            : "Submitting..."
-          : labels.submit}
+        {isOffline
+          ? "Server is currently unavailable. Please try again later."
+          : isSubmitting
+            ? locale === "hi"
+              ? "जमा हो रहा है..."
+              : "Submitting..."
+            : labels.submit}
       </button>
 
       {error ? <p className="mt-4 text-sm text-rose-600">{error}</p> : null}

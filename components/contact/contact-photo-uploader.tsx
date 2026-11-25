@@ -10,6 +10,7 @@ export interface ContactPhotoUploaderProps {
   onPhotoSelect?: (file: File | null) => void;
   locale: AppLocale;
   required?: boolean;
+  disabled?: boolean;
 }
 
 /**
@@ -22,6 +23,7 @@ export function ContactPhotoUploader({
   onPhotoSelect,
   locale,
   required = true,
+  disabled = false,
 }: ContactPhotoUploaderProps) {
   return (
     <FileUploader
@@ -36,6 +38,7 @@ export function ContactPhotoUploader({
       category="members"
       required={required}
       maxSizeMB={5}
+      disabled={disabled}
     />
   );
 }

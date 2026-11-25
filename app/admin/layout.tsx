@@ -1,5 +1,6 @@
 import { AuthProvider } from "@/contexts/auth-context";
 import { ToastProvider } from "@/contexts/toast-context";
+import { AdminOfflineGuard } from "@/components/admin/admin-offline-guard";
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
@@ -14,9 +15,11 @@ export default function AdminRootLayout({
 }) {
   return (
     <div data-theme="light" data-admin-panel className="admin-scope admin-theme min-h-screen text-[#0f172a] bg-[#f7fbff]">
-      <AuthProvider>
-        <ToastProvider>{children}</ToastProvider>
-      </AuthProvider>
+      <AdminOfflineGuard>
+        <AuthProvider>
+          <ToastProvider>{children}</ToastProvider>
+        </AuthProvider>
+      </AdminOfflineGuard>
     </div>
   );
 }
