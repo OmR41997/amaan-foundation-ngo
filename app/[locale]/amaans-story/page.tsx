@@ -32,15 +32,10 @@ async function getNostalgiaImages(defaultAlt: string): Promise<{ images: string[
     console.warn("Could not fetch nostalgia images from Gallery API, falling back:", err);
   }
 
-  // Fallback 1: Local gallery collections JSON
+  // Fallback 1: Local gallery collection from @/data/gallery
   try {
-    const galleryJson = (await import("@/public/collections/gallery.json")).default as Record<
-      string,
-      Array<{ photoUrl: string; eventType?: string; eventName?: string }>
-    >;
-    const nostalgiaList = (galleryJson.amaan || []).filter(
-      (item) => item.eventType?.toLowerCase() === "nostalgia" && Boolean(item.photoUrl)
-    );
+    const { getStaticNostalgiaItems } = await import("@/data/gallery");
+    const nostalgiaList = getStaticNostalgiaItems();
     if (nostalgiaList.length > 0) {
       return {
         images: nostalgiaList.map((item) => item.photoUrl),

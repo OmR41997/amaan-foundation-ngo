@@ -114,8 +114,9 @@ export async function getFounderPresidentImage(): Promise<string> {
         return resolved;
       }
     }
-  } catch (err) {
-    console.error("Could not fetch team members for founder image:", err);
+  } catch (err: any) {
+    // Backend is offline or unreachable - gracefully fall back without noisy stack trace
+    console.warn(`[Backend Offline] Using default founder image (${err?.message || "unreachable"})`);
   }
 
   // Fallback to static team definitions in data/team.ts (last one image of Founder & President)

@@ -122,32 +122,11 @@ export function GalleryLightbox({
   // Discover distinct categories, strictly filtering out "nostalgia"
   useEffect(() => {
     let isMounted = true;
-    import("@/public/collections/gallery.json")
+    import("@/data/gallery")
       .then((mod) => {
         if (!isMounted) return;
-        const data = mod.default as Record<string, Array<{ eventType?: string }>>;
-        const typeSet = new Set<string>();
-
-        Object.values(data).forEach((group) => {
-          if (Array.isArray(group)) {
-            group.forEach((item) => {
-              const type = item.eventType?.trim();
-              // Strictly exclude nostalgia from the public gallery web portal
-              if (type && type.toLowerCase() !== "nostalgia") {
-                typeSet.add(type);
-              }
-            });
-          }
-        });
-
-        if (typeSet.size > 0) {
-          const dynamicCats: GalleryCategoryOption[] = [
-            { id: "all", title: locale === "hi" ? "सभी श्रेणियां" : "All categories" },
-            ...Array.from(typeSet).map((cat) => ({
-              id: cat,
-              title: cat.charAt(0).toUpperCase() + cat.slice(1),
-            })),
-          ];
+        const dynamicCats = mod.getStaticGalleryCategories(locale);
+        if (dynamicCats.length > 1) {
           setCategories(dynamicCats);
         }
       })
@@ -193,33 +172,10 @@ export function GalleryLightbox({
       console.warn("Gallery API fetch failed, falling back to local collection:", err);
     }
 
-    // Fallback to local collections/gallery.json if API is unreachable
+    // Fallback to local @/data/gallery if API is unreachable
     try {
-      const mod = await import("@/public/collections/gallery.json");
-      const data = mod.default as Record<
-        string,
-        Array<{ photoUrl: string; eventName?: string; eventType?: string; isPublished?: boolean }>
-      >;
-
-      const allItems: GalleryImage[] = [];
-      Object.values(data).forEach((group) => {
-        if (Array.isArray(group)) {
-          group.forEach((it) => {
-            // Strictly exclude nostalgia from the public gallery web portal
-            if (it.photoUrl && it.eventType?.toLowerCase() !== "nostalgia") {
-              if (it.isPublished === undefined || it.isPublished === true) {
-                if (selectedCategory === "all" || it.eventType?.toLowerCase() === selectedCategory.toLowerCase()) {
-                  allItems.push({
-                    src: it.photoUrl,
-                    eventName: it.eventName || "Gallery Image",
-                    eventType: it.eventType || "General",
-                  });
-                }
-              }
-            }
-          });
-        }
-      });
+      const mod = await import("@/data/gallery");
+      const allItems = mod.getStaticGalleryImages(selectedCategory);
 
       const totalCount = allItems.length;
       const computedTotalPages = Math.max(1, Math.ceil(totalCount / limit));

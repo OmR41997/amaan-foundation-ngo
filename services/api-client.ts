@@ -6,9 +6,17 @@ const rawBaseUrl = process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:3001/api
 // Sanitize potential duplicate slashes in the base url while keeping the protocol (http:// or https://)
 export const API_URL = rawBaseUrl.replace(/([^:]\/)\/+/g, "$1").replace(/\/+$/, "");
 
+// 5 seconds default timeout: Perfect balance for slow internet / heavy structures,
+// while ensuring the page never hangs if the backend is down.
+export const DEFAULT_API_TIMEOUT_MS = Number(process.env.NEXT_PUBLIC_API_TIMEOUT_MS) || 5000;
+
+export interface ApiFetchOptions extends RequestInit {
+  timeoutMs?: number;
+}
+
 export async function apiFetch<T>(
   path: string,
-  options: RequestInit = {},
+  options: ApiFetchOptions = {},
   auth = true,
 ): Promise<ApiResponse<T>> {
   const headers: Record<string, string> = {
@@ -24,16 +32,64 @@ export async function apiFetch<T>(
   }
 
   const cleanPath = path.startsWith("/") ? path : `/${path}`;
-  const response = await fetch(`${API_URL}${cleanPath}`, {
-    ...options,
-    cache: "no-store",
-    headers,
-  });
+  const timeoutMs = options.timeoutMs ?? DEFAULT_API_TIMEOUT_MS;
 
-  const payload = (await response.json()) as ApiResponse<T> & { message?: string };
+  const controller = new AbortController();
+  const timer = setTimeout(() => {
+    controller.abort(new Error(`Timeout: Backend did not respond within ${timeoutMs / 1000}s`));
+  }, timeoutMs);
 
-  if (!response.ok) {
-    throw new ApiError(payload.message ?? "Request failed", response.status);
+  // Link external signal if provided
+  if (options.signal) {
+    if (options.signal.aborted) {
+      controller.abort(options.signal.reason);
+    } else {
+      options.signal.addEventListener("abort", () => {
+        controller.abort(options.signal?.reason);
+      });
+    }
+  }
+
+  let response: Response;
+  try {
+    response = await fetch(`${API_URL}${cleanPath}`, {
+      ...options,
+      signal: controller.signal,
+      cache: "no-store",
+      headers,
+    });
+  } catch (err: any) {
+    clearTimeout(timer);
+    if (err.name === "AbortError" || controller.signal.aborted) {
+      throw new ApiError(
+        `Backend request timed out after ${timeoutMs / 1000} seconds on ${cleanPath}`,
+        504,
+      );
+    }
+    throw new ApiError(
+      err.message || `Failed to connect to backend at ${API_URL}`,
+      503,
+    );
+  } finally {
+    clearTimeout(timer);
+  }
+
+  let payload: (ApiResponse<T> & { message?: string }) | null = null;
+  try {
+    payload = await response.json();
+  } catch {
+    // Backend returned non-JSON (e.g. 502/504 gateway timeout HTML or empty body)
+    throw new ApiError(
+      `Backend returned non-JSON response (${response.status} ${response.statusText})`,
+      response.status || 502,
+    );
+  }
+
+  if (!response.ok || !payload) {
+    throw new ApiError(
+      payload?.message ?? `Request failed with status ${response.status}`,
+      response.status,
+    );
   }
 
   return payload;

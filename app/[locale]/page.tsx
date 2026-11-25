@@ -4,7 +4,11 @@ import { getTranslations, setRequestLocale } from "next-intl/server";
 import type { Metadata } from "next";
 import { HomeView } from "@/components/home/home-view";
 import { fetchInitiativesPrograms } from "@/lib/api/initiatives-programs";
-import { getFounderPresidentImage } from "@/lib/api/teams";
+import { getFounderPresidentImage, DEFAULT_FOUNDER_IMAGE } from "@/lib/api/teams";
+import { staticInitiatives } from "@/data/initiatives";
+
+export const dynamic = "force-dynamic";
+export const revalidate = 0;
 
 export async function generateMetadata({
   params,
@@ -35,7 +39,25 @@ export default async function HomePage({
   const visionParagraphs = (t.raw("vision.paragraphs") as string[]) || [];
   const objectiveAreas = (t.raw("objectives.areas") as string[]) || [];
   const founderAlt = locale === "hi" ? "संस्थापक अलीम अंसारी" : "Founder Alim Ansari portrait";
-  const founderImage = await getFounderPresidentImage();
+
+  // Fetch dynamic data in parallel with 30s timeout and graceful fallbacks.
+  // If backend/db doesn't respond in 30s, open cleanly without backend connectivity.
+  // When refreshed and backend responds, live data will automatically render.
+  const [founderResult, initiativesResult] = await Promise.allSettled([
+    getFounderPresidentImage(),
+    fetchInitiativesPrograms({
+      page: 1,
+      limit: 6,
+      isPublished: true,
+      sortBy: "createdAt",
+      order: "desc",
+    }),
+  ]);
+
+  const founderImage =
+    founderResult.status === "fulfilled" && founderResult.value
+      ? founderResult.value
+      : DEFAULT_FOUNDER_IMAGE;
 
   const data = getContent(locale);
 
@@ -90,24 +112,24 @@ export default async function HomePage({
     image: string;
   }> = [];
 
-  try {
-    const res = await fetchInitiativesPrograms({
-      page: 1,
-      limit: 6,
-      isPublished: true,
-      sortBy: "createdAt",
-      order: "desc",
-    });
-
-    if (res?.data && Array.isArray(res.data)) {
-      impactSections = res.data.map((item) => ({
-        title: item.title,
-        description: item.description,
-        image: item.photoUrl,
-      }));
-    }
-  } catch (err) {
-    console.error("Could not load initiatives programs from API:", err);
+  if (
+    initiativesResult.status === "fulfilled" &&
+    initiativesResult.value?.data &&
+    Array.isArray(initiativesResult.value.data) &&
+    initiativesResult.value.data.length > 0
+  ) {
+    impactSections = initiativesResult.value.data.map((item) => ({
+      title: item.title,
+      description: item.description,
+      image: item.photoUrl,
+    }));
+  } else {
+    // Graceful offline fallback from @/data/initiatives
+    impactSections = staticInitiatives.map((item) => ({
+      title: item.title,
+      description: item.description,
+      image: item.photoUrl,
+    }));
   }
 
   const certificates = [
