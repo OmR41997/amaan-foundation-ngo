@@ -247,7 +247,7 @@ export function AdminSidebar({
         ))}
       </nav>
 
-      {/* Sidebar Footer: Web Portal Link & Collapse Feature */}
+      {/* Sidebar Footer: Web Portal Link */}
       <div className="mt-auto border-t border-white/10 p-2 space-y-1 bg-black/20">
         {/* Link to public Web Portal */}
         <Link
@@ -287,33 +287,6 @@ export function AdminSidebar({
             </>
           ) : null}
         </Link>
-
-        {/* Sidebar Collapse / Expand toggle button */}
-        {onToggleCollapse ? (
-          <button
-            type="button"
-            onClick={onToggleCollapse}
-            title={collapsed ? "Expand sidebar" : "Collapse sidebar"}
-            className={`hidden md:flex items-center gap-2.5 w-full rounded-lg px-2.5 py-1.5 text-xs font-medium text-white/50 hover:bg-white/10 hover:text-white transition ${
-              collapsed ? "justify-center px-2" : ""
-            }`}
-          >
-            <svg
-              className={`h-4 w-4 shrink-0 transition-transform ${collapsed ? "rotate-180" : ""}`}
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="2"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-            >
-              <rect x="3" y="3" width="18" height="18" rx="2" />
-              <path d="M9 3v18" />
-              <polyline points="15 9 12 12 15 15" />
-            </svg>
-            {!collapsed ? <span className="truncate">Collapse sidebar</span> : null}
-          </button>
-        ) : null}
       </div>
     </aside>
   );

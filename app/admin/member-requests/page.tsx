@@ -20,7 +20,7 @@ function MemberRequestsContent() {
 
 export default function MemberRequestsPage() {
   return (
-    <AdminShell title="All Requests" showSidebarToggle={false}>
+    <AdminShell title="All Requests">
       <Suspense fallback={<div className="py-10 text-center text-sm text-[#6b7c8f]">Loading...</div>}>
         <MemberRequestsContent />
       </Suspense>

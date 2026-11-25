@@ -20,7 +20,7 @@ const pageTitles: Record<string, string> = {
 export function AdminShell({
   children,
   title,
-  showSidebarToggle = false,
+  showSidebarToggle = true,
 }: {
   children: React.ReactNode;
   title?: string;
@@ -71,7 +71,6 @@ export function AdminShell({
         <Suspense fallback={<div className="w-52 bg-[#0f2235]" />}>
           <AdminSidebar
             collapsed={sidebarCollapsed}
-            onToggleCollapse={() => setSidebarCollapsed((v) => !v)}
             onCloseMobile={() => setMobileOpen(false)}
           />
         </Suspense>

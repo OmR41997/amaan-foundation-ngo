@@ -6,7 +6,7 @@ import { Suspense } from "react";
 
 export default function AdminDashboardExplicitPage() {
   return (
-    <AdminShell title="Dashboard Overview" showSidebarToggle={false}>
+    <AdminShell title="Dashboard Overview">
       <Suspense
         fallback={
           <div className="py-12 text-center text-sm text-[#6b7c8f]">

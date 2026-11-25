@@ -25,10 +25,10 @@ export function AdminHeader({
         <button
           type="button"
           onClick={onMenuClick}
-          className="rounded-lg border border-[#d7e4ef] p-2 text-[#64748b] hover:bg-[#f8fafc] hover:text-[#0f172a] md:hidden"
+          className="rounded-lg border border-[#d7e4ef] bg-white p-2 text-[#526477] shadow-xs transition hover:border-[#1f6fa8]/30 hover:bg-[#f0f6fb] hover:text-[#1f6fa8] active:scale-95 md:hidden"
           aria-label="Open sidebar menu"
         >
-          <svg className="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+          <svg className="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
             <path d="M4 7h16M4 12h16M4 17h16" />
           </svg>
         </button>
@@ -39,11 +39,11 @@ export function AdminHeader({
             type="button"
             onClick={onToggleSidebar}
             title={sidebarCollapsed ? "Expand sidebar" : "Collapse sidebar"}
-            className="hidden h-9 w-9 items-center justify-center rounded-lg border border-[#d7e4ef] bg-white text-[#64748b] transition hover:bg-[#f1f5f9] hover:text-[#0f172a] md:inline-flex"
-            aria-label="Toggle sidebar"
+            aria-label={sidebarCollapsed ? "Expand sidebar" : "Collapse sidebar"}
+            className="group hidden h-9 w-9 items-center justify-center rounded-lg border border-[#d7e4ef] bg-white text-[#526477] shadow-xs transition-all duration-150 hover:border-[#1f6fa8]/40 hover:bg-[#f0f6fb] hover:text-[#1f6fa8] active:scale-95 md:inline-flex"
           >
             <svg
-              className={`h-4 w-4 transition-transform duration-200 ${sidebarCollapsed ? "rotate-180" : ""}`}
+              className="h-4.5 w-4.5 transition-transform duration-200 group-hover:scale-105"
               viewBox="0 0 24 24"
               fill="none"
               stroke="currentColor"
@@ -53,12 +53,16 @@ export function AdminHeader({
             >
               <rect x="3" y="3" width="18" height="18" rx="2" />
               <path d="M9 3v18" />
-              <polyline points="15 9 12 12 15 15" />
+              {sidebarCollapsed ? (
+                <polyline points="13 9 16 12 13 15" />
+              ) : (
+                <polyline points="16 9 13 12 16 15" />
+              )}
             </svg>
           </button>
         ) : null}
 
-        <h1 className="text-lg font-bold text-[#143046] md:text-xl">{title}</h1>
+        <h1 className="text-lg font-bold text-[#143046] md:text-xl truncate">{title}</h1>
       </div>
 
       <div className="flex items-center gap-3">
