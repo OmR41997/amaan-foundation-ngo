@@ -2,8 +2,7 @@ import { getToken } from "@/lib/auth/storage";
 import { compressImageFile, ImageCompressionOptions } from "../image-compressor";
 import { ApiError } from "./client";
 import type { ApiResponse, UploadMediaRecord } from "./types";
-
-const API_URL = process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:3001/api/v1";
+import { API_URL } from "@/services/api-config";
 
 export interface DirectUploadOptions {
   category?: string;

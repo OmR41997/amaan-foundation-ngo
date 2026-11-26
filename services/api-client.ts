@@ -1,14 +1,10 @@
 import { getToken } from "@/lib/auth/storage";
 import type { ApiResponse } from "@/lib/api/types";
 import { ApiError } from "./api-error";
+import { API_TIMEOUT_MS, API_URL } from "./api-config";
 
-const rawBaseUrl = process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:3001/api/v1";
-// Sanitize potential duplicate slashes in the base url while keeping the protocol (http:// or https://)
-export const API_URL = rawBaseUrl.replace(/([^:]\/)\/+/g, "$1").replace(/\/+$/, "");
-
-// 5 seconds default timeout: Perfect balance for slow internet / heavy structures,
-// while ensuring the page never hangs if the backend is down.
-export const DEFAULT_API_TIMEOUT_MS = Number(process.env.NEXT_PUBLIC_API_TIMEOUT_MS) || 10000;
+export { API_URL } from "./api-config";
+export const DEFAULT_API_TIMEOUT_MS = API_TIMEOUT_MS;
 
 export interface ApiFetchOptions extends RequestInit {
   timeoutMs?: number;
