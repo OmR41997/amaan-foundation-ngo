@@ -8,7 +8,7 @@ export const API_URL = rawBaseUrl.replace(/([^:]\/)\/+/g, "$1").replace(/\/+$/, 
 
 // 5 seconds default timeout: Perfect balance for slow internet / heavy structures,
 // while ensuring the page never hangs if the backend is down.
-export const DEFAULT_API_TIMEOUT_MS = Number(process.env.NEXT_PUBLIC_API_TIMEOUT_MS) || 5000;
+export const DEFAULT_API_TIMEOUT_MS = Number(process.env.NEXT_PUBLIC_API_TIMEOUT_MS) || 10000;
 
 export interface ApiFetchOptions extends RequestInit {
   timeoutMs?: number;
