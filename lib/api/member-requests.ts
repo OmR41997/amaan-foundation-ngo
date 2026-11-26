@@ -1,6 +1,5 @@
 import { apiFetch, ApiError } from "./client";
 import type {
-  DashboardStats,
   MemberRequest,
   MembershipType,
   RequestStatus,
@@ -34,10 +33,6 @@ export async function fetchMemberRequests(query: MemberRequestQuery = {}) {
   });
   const qs = params.toString();
   return apiFetch<MemberRequest[]>(`/member-requests${qs ? `?${qs}` : ""}`);
-}
-
-export async function fetchDashboardStats() {
-  return apiFetch<DashboardStats>("/member-requests/stats");
 }
 
 export async function approveMemberRequest(id: string) {

@@ -55,13 +55,6 @@ export interface MemberRequest {
   updatedAt: string;
 }
 
-export interface DashboardStats {
-  pending: number;
-  approved: number;
-  rejected: number;
-  total: number;
-}
-
 export interface AuthUser {
   id: string;
   email: string;
