@@ -79,7 +79,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         }
         setAuth(res.data.accessToken, res.data.user);
         setUser(res.data.user);
-        router.push("/admin/member-requests");
+        router.push("/admin/dashboard");
       } catch (err) {
         if (err instanceof ApiError) throw err;
         throw new Error("Login failed");

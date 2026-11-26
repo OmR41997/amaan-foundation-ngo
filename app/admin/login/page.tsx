@@ -22,7 +22,7 @@ export default function AdminLoginPage() {
 
   useEffect(() => {
     if (!isLoading && isAuthenticated) {
-      router.replace("/admin/member-requests");
+      router.replace("/admin/dashboard");
     }
   }, [isLoading, isAuthenticated, router]);
 
